@@ -1,25 +1,21 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { InStoreBase } from 'src/resources/base/base.entity';
+import { Entity, Column, ManyToOne, OneToMany } from 'typeorm';
+import { Product } from './product.entity';
 
-export type ProductCollectionDocument = ProductCollection & Document;
-@Schema({
-  timestamps: true,
-})
-export class ProductCollection {
-  @Prop()
+@Entity('product_collection')
+export class ProductCollection extends InStoreBase {
+  @Column()
   name: string;
 
-  @Prop()
+  @Column()
   slug: string;
 
-  @Prop()
-  products: [];
+  @OneToMany((type) => Product, (product) => product.collection)
+  products: Product[];
 
-  @Prop()
+  @Column()
   image: string;
 
-  @Prop()
+  @Column()
   description: string;
 }
-
-export const ProductCollectionSchema =
-  SchemaFactory.createForClass(ProductCollection);

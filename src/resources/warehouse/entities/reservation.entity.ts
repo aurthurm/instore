@@ -1,24 +1,22 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { SchemaTypes } from 'mongoose';
+import { InStoreBase } from 'src/resources/base/base.entity';
+import { CheckOutLine } from 'src/resources/checkout/entities/checkout-line.entity';
+import { Entity, Column, OneToMany } from 'typeorm';
 import { Stock } from './stock.entity';
 
-export type ReservationDocument = Reservation & Document;
+@Entity('reservation')
+export class Reservation extends InStoreBase {
+  @OneToMany(
+    (type) => CheckOutLine,
+    (checkout_line) => checkout_line.reservation,
+  )
+  checkout_lines: CheckOutLine[];
 
-@Schema({
-  timestamps: true,
-})
-export class Reservation {
-  @Prop({ type: SchemaTypes.ObjectId, ref: 'CheckOutline' })
-  checkout_line: CheckOutLine;
+  @OneToMany((type) => Stock, (stock) => stock.reservation)
+  stocks: Stock[];
 
-  @Prop({ type: SchemaTypes.ObjectId, ref: 'Stock' })
-  stock: Stock;
-
-  @Prop()
+  @Column()
   quantity_reserved: number;
 
-  @Prop()
+  @Column()
   reserved_until: Date;
 }
-
-export const ReservationSchema = SchemaFactory.createForClass(Reservation);

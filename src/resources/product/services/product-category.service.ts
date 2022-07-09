@@ -1,43 +1,41 @@
 import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { InjectRepository } from '@nestjs/typeorm';
+import { prepareForCreate, prepareForUpdate } from 'src/helpers/entity.helpers';
+import { Repository } from 'typeorm';
 import { CreateProductDto } from '../dto/create-product.dto';
 import { UpdateProductDto } from '../dto/update-product.dto';
-import {
-  ProductCategory,
-  ProductCategoryDocument,
-} from '../entities/product-category.entity';
+import { ProductCategory } from '../entities/product-category.entity';
 
 @Injectable()
-export class ProductCategoryCategoryService {
+export class ProductCategoryService {
   constructor(
-    @InjectModel(ProductCategory.name)
-    private productModel: Model<ProductCategoryDocument>,
+    @InjectRepository(ProductCategory)
+    private productRepository: Repository<ProductCategory>,
   ) {}
 
   async create(productCategory: CreateProductDto): Promise<ProductCategory> {
-    const newProductCategory = new this.productModel(productCategory);
-    return newProductCategory.save();
+    return this.productRepository.save(prepareForCreate(productCategory));
   }
 
-  async readAll(): Promise<ProductCategory[]> {
-    return await this.productModel.find().exec();
+  async readAll(query = {}): Promise<ProductCategory[]> {
+    return await this.productRepository.find(query);
   }
 
-  async readById(id): Promise<ProductCategory> {
-    return await this.productModel.findById(id).exec();
+  async readById(id: string): Promise<ProductCategory> {
+    return await this.productRepository.findOneBy({ id });
   }
 
   async update(
     id,
     productCategory: UpdateProductDto,
   ): Promise<ProductCategory> {
-    return await this.productModel.findByIdAndUpdate(id, productCategory, {
-      new: true,
-    });
+    const productCat = await this.readById(id);
+    return await this.productRepository.save(
+      Object.assign(productCat, productCategory),
+    );
   }
 
   async delete(id): Promise<any> {
-    return await this.productModel.findByIdAndRemove(id);
+    return await this.productRepository.remove(id);
   }
 }

@@ -1,25 +1,23 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { SchemaTypes } from 'mongoose';
-import { ProductVariant } from 'src/resources/product/entities/product-variant.entity';
+import { InStoreBase } from 'src/resources/base/base.entity';
+import { Entity, Column, ManyToOne } from 'typeorm';
+import { Allocation } from './allocation.entity';
+import { Reservation } from './reservation.entity';
 import { WareHouse } from './warehouse.entity';
 
-export type StockDocument = Stock & Document;
-
-@Schema({
-  timestamps: true,
-})
-export class Stock {
-  @Prop({ type: SchemaTypes.ObjectId, ref: 'WareHouse' })
-  warehouse: WareHouse;
-
-  @Prop({ type: SchemaTypes.ObjectId, ref: 'ProductVariant' })
-  product_variant: ProductVariant;
-
-  @Prop()
+@Entity('stock')
+export class Stock extends InStoreBase {
+  @Column()
   quantity: number;
 
-  @Prop()
+  @Column()
   quantity_allocated: number;
-}
 
-export const StockSchema = SchemaFactory.createForClass(Stock);
+  @ManyToOne((type) => WareHouse, (warehouse) => warehouse.stocks)
+  warehouse: WareHouse;
+
+  @ManyToOne((type) => Reservation, (reservaton) => reservaton.stocks)
+  reservation: Reservation;
+
+  @ManyToOne((type) => Allocation, (allocation) => allocation.stocks)
+  allocation: Allocation;
+}

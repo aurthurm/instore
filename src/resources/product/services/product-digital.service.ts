@@ -1,40 +1,38 @@
 import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { InjectRepository } from '@nestjs/typeorm';
+import { prepareForCreate, prepareForUpdate } from 'src/helpers/entity.helpers';
+import { Repository } from 'typeorm';
 import { CreateProductDto } from '../dto/create-product.dto';
 import { UpdateProductDto } from '../dto/update-product.dto';
-import {
-  ProductDigital,
-  ProductDigitalDocument,
-} from '../entities/product-digital.entity';
+import { ProductDigital } from '../entities/product-digital.entity';
 
 @Injectable()
-export class ProductDigitalDigitalService {
+export class ProductDigitalService {
   constructor(
-    @InjectModel(ProductDigital.name)
-    private productModel: Model<ProductDigitalDocument>,
+    @InjectRepository(ProductDigital)
+    private productRepository: Repository<ProductDigital>,
   ) {}
 
   async create(productDigital: CreateProductDto): Promise<ProductDigital> {
-    const newProductDigital = new this.productModel(productDigital);
-    return newProductDigital.save();
+    return this.productRepository.save(prepareForCreate(productDigital));
   }
 
   async readAll(): Promise<ProductDigital[]> {
-    return await this.productModel.find().exec();
+    return await this.productRepository.find();
   }
 
-  async readById(id): Promise<ProductDigital> {
-    return await this.productModel.findById(id).exec();
+  async readById(id: string): Promise<ProductDigital> {
+    return await this.productRepository.findOneBy({ id });
   }
 
-  async update(id, productDigital: UpdateProductDto): Promise<ProductDigital> {
-    return await this.productModel.findByIdAndUpdate(id, productDigital, {
-      new: true,
-    });
+  async update(id: string, productDigital: UpdateProductDto): Promise<any> {
+    return await this.productRepository.update(
+      id,
+      prepareForUpdate(productDigital),
+    );
   }
 
   async delete(id): Promise<any> {
-    return await this.productModel.findByIdAndRemove(id);
+    return await this.productRepository.remove(id);
   }
 }

@@ -1,40 +1,38 @@
 import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { InjectRepository } from '@nestjs/typeorm';
+import { prepareForCreate, prepareForUpdate } from 'src/helpers/entity.helpers';
+import { Repository } from 'typeorm';
 import { CreateProductDto } from '../dto/create-product.dto';
 import { UpdateProductDto } from '../dto/update-product.dto';
-import {
-  ProductType,
-  ProductTypeDocument,
-} from '../entities/product-type.entity';
+import { ProductType } from '../entities/product-type.entity';
 
 @Injectable()
 export class ProductTypeService {
   constructor(
-    @InjectModel(ProductType.name)
-    private productTypeModel: Model<ProductTypeDocument>,
+    @InjectRepository(ProductType)
+    private productTypeRepository: Repository<ProductType>,
   ) {}
 
   async create(productType: CreateProductDto): Promise<ProductType> {
-    const newProductType = new this.productTypeModel(productType);
-    return newProductType.save();
+    return this.productTypeRepository.save(prepareForCreate(productType));
   }
 
-  async readAll(): Promise<ProductType[]> {
-    return await this.productTypeModel.find().exec();
+  async readAll(query = {}): Promise<ProductType[]> {
+    return await this.productTypeRepository.find(query);
   }
 
-  async readById(id): Promise<ProductType> {
-    return await this.productTypeModel.findById(id).exec();
+  async readById(id: string): Promise<ProductType> {
+    return await this.productTypeRepository.findOneBy({ id });
   }
 
-  async update(id, productType: UpdateProductDto): Promise<ProductType> {
-    return await this.productTypeModel.findByIdAndUpdate(id, productType, {
-      new: true,
-    });
+  async update(id: string, productType: UpdateProductDto): Promise<any> {
+    return await this.productTypeRepository.update(
+      { id },
+      prepareForUpdate(productType),
+    );
   }
 
   async delete(id): Promise<any> {
-    return await this.productTypeModel.findByIdAndRemove(id);
+    return await this.productTypeRepository.remove(id);
   }
 }

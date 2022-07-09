@@ -9,3 +9,19 @@ export enum Role {
   ADMIN = 'ADMIN',
   ADVERTISER = 'ADVERTISER',
 }
+
+export const SUPER_USER = {
+  userName: 'superadmin',
+  email: 'superadmin@instore.com',
+  firstName: 'Admin',
+  lastName: 'Admin',
+  middleName: '',
+  name: 'Administrator',
+  status: 'active',
+  roles: ['admin'],
+  pin: '0000',
+  password: 'admin',
+  address: '',
+  requirePinChange: true,
+  requirePasswordChange: true,
+};

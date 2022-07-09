@@ -1,9 +1,12 @@
 import { Module } from '@nestjs/common';
-import { CheckoutService } from './services/checkout.service';
-import { CheckoutController } from './controllers/checkout.controller';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { CHECKOUT_SERVICES } from './services';
+import { CHECKOUT_ENTITIES } from './entities';
+import { CHECKOUT_CONTROLLERS } from './controllers';
 
 @Module({
-  controllers: [CheckoutController],
-  providers: [CheckoutService],
+  imports: [TypeOrmModule.forFeature([...CHECKOUT_ENTITIES])],
+  controllers: [...CHECKOUT_CONTROLLERS],
+  providers: [...CHECKOUT_SERVICES],
 })
 export class CheckoutModule {}

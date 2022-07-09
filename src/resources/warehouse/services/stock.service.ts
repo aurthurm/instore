@@ -1,37 +1,36 @@
 import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { InjectRepository } from '@nestjs/typeorm';
+import { prepareForCreate, prepareForUpdate } from 'src/helpers/entity.helpers';
+import { Repository } from 'typeorm';
 import { CreateWarehouseDto } from '../dto/create-warehouse.dto';
 import { UpdateWarehouseDto } from '../dto/update-warehouse.dto';
-import { Stock, StockDocument } from '../entities/stock.entity';
+import { Stock } from '../entities/stock.entity';
 
 @Injectable()
 export class StockService {
   constructor(
-    @InjectModel(Stock.name)
-    private stockModel: Model<StockDocument>,
+    @InjectRepository(Stock)
+    private stockRepository: Repository<Stock>,
   ) {}
 
   async create(stock: CreateWarehouseDto): Promise<Stock> {
-    const newStock = new this.stockModel(stock);
-    return newStock.save();
+    return this.stockRepository.save(prepareForCreate(stock));
   }
 
   async readAll(): Promise<Stock[]> {
-    return await this.stockModel.find().exec();
+    return await this.stockRepository.find();
   }
 
   async readById(id): Promise<Stock> {
-    return await this.stockModel.findById(id).exec();
+    return await this.stockRepository.findOneBy({ id });
   }
 
   async update(id, stock: UpdateWarehouseDto): Promise<Stock> {
-    return await this.stockModel.findByIdAndUpdate(id, stock, {
-      new: true,
-    });
+    await this.stockRepository.update(id, prepareForUpdate(stock));
+    return await this.readById(id);
   }
 
   async delete(id): Promise<any> {
-    return await this.stockModel.findByIdAndRemove(id);
+    return await this.stockRepository.remove(id);
   }
 }

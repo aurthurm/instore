@@ -28,7 +28,7 @@ export class AuthService {
     if (user && isMatch) {
       const updatedUser = new UpdateUserDto();
       updatedUser.lastLogin = new Date();
-      this.usersService.update(user._id, updatedUser);
+      this.usersService.update(user.id, updatedUser);
       const { pin, password, ...result } = user;
       return result;
     }
@@ -54,7 +54,7 @@ export class AuthService {
     updatedUser.resetPasswordKey = resetKey;
     updatedUser.resetPinKey = resetKey;
     updatedUser.lastPasswordReset = new Date();
-    this.usersService.update(user._id, updatedUser);
+    this.usersService.update(user.id, updatedUser);
     //send email to the user
     this.emailService.sendEmail();
     console.log(resetUrl, user);
@@ -77,7 +77,7 @@ export class AuthService {
       updatedUser.password = password;
       updatedUser.pin = await bcrypt.hash(password, this.SALT_ROUNS);
       updatedUser.password = await bcrypt.hash(password, this.SALT_ROUNS);
-      this.usersService.update(user._id, updatedUser);
+      this.usersService.update(user.id, updatedUser);
 
       return { message: 'Password reset successfully' };
     }

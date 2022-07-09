@@ -1,37 +1,36 @@
 import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { InjectRepository } from '@nestjs/typeorm';
+import { prepareForCreate, prepareForUpdate } from 'src/helpers/entity.helpers';
+import { Repository } from 'typeorm';
 import { CreateWarehouseDto } from '../dto/create-warehouse.dto';
 import { UpdateWarehouseDto } from '../dto/update-warehouse.dto';
-import { Allocation, AllocationDocument } from '../entities/allocation.entity';
+import { Allocation } from '../entities/allocation.entity';
 
 @Injectable()
 export class AllocationService {
   constructor(
-    @InjectModel(Allocation.name)
-    private allocationModel: Model<AllocationDocument>,
+    @InjectRepository(Allocation)
+    private allocationRepository: Repository<Allocation>,
   ) {}
 
   async create(allocation: CreateWarehouseDto): Promise<Allocation> {
-    const newAllocation = new this.allocationModel(allocation);
-    return newAllocation.save();
+    return await this.allocationRepository.save(prepareForCreate(allocation));
   }
 
   async readAll(): Promise<Allocation[]> {
-    return await this.allocationModel.find().exec();
+    return await this.allocationRepository.find();
   }
 
   async readById(id): Promise<Allocation> {
-    return await this.allocationModel.findById(id).exec();
+    return await this.allocationRepository.findOneBy({ id });
   }
 
   async update(id, allocation: UpdateWarehouseDto): Promise<Allocation> {
-    return await this.allocationModel.findByIdAndUpdate(id, allocation, {
-      new: true,
-    });
+    await this.allocationRepository.update(id, prepareForUpdate(allocation));
+    return await this.readById(id);
   }
 
   async delete(id): Promise<any> {
-    return await this.allocationModel.findByIdAndRemove(id);
+    return await this.allocationRepository.remove(id);
   }
 }

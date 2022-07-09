@@ -1,18 +1,15 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { InStoreBase } from 'src/resources/base/base.entity';
+import { Entity, Column, ManyToOne } from 'typeorm';
+import { ProductVariant } from './product-variant.entity';
 
-export type ProductMediaDocument = ProductMedia & Document;
-@Schema({
-  timestamps: true,
-})
-export class ProductMedia {
-  @Prop()
-  product: string;
+@Entity('product_media')
+export class ProductMedia extends InStoreBase {
+  @ManyToOne((type) => ProductVariant, (product) => product.media)
+  product: ProductVariant;
 
-  @Prop()
+  @Column()
   image: string;
 
-  @Prop()
+  @Column()
   alt: string;
 }
-
-export const ProductMediaSchema = SchemaFactory.createForClass(ProductMedia);

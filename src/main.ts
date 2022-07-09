@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import helmet from 'helmet';
+import { AppInitService } from './providers/inititlizer';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -20,5 +21,7 @@ async function bootstrap() {
   app.use(helmet());
 
   await app.listen(3000);
+  const appService = app.get(AppInitService);
+  appService.initialize();
 }
 bootstrap();

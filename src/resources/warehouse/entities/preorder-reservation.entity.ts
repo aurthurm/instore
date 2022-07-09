@@ -1,22 +1,18 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { SchemaTypes } from 'mongoose';
-import { OrderLine } from 'src/resources/order/entities/order-line.entity';
+import { InStoreBase } from 'src/resources/base/base.entity';
+import { CheckOutLine } from 'src/resources/checkout/entities/checkout-line.entity';
+import { Entity, Column, OneToMany } from 'typeorm';
 
-export type PreOrderReservationDocument = PreOrderReservation & Document;
+@Entity('pre_order_reservaton')
+export class PreOrderReservation extends InStoreBase {
+  @OneToMany(
+    (type) => CheckOutLine,
+    (checkout_line) => checkout_line.preorder_reservation,
+  )
+  checkout_lines: CheckOutLine[];
 
-@Schema({
-  timestamps: true,
-})
-export class PreOrderReservation {
-  @Prop({ type: SchemaTypes.ObjectId, ref: 'CheckOutline' })
-  checkout_line: CheckOutLine;
-
-  @Prop()
+  @Column()
   quantity_reserved: number;
 
-  @Prop()
+  @Column()
   reserved_until: Date;
 }
-
-export const PreOrderReservationSchema =
-  SchemaFactory.createForClass(PreOrderReservation);

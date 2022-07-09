@@ -1,40 +1,36 @@
 import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { InjectRepository } from '@nestjs/typeorm';
+import { prepareForCreate, prepareForUpdate } from 'src/helpers/entity.helpers';
+import { Repository } from 'typeorm';
 import { CreateWarehouseDto } from '../dto/create-warehouse.dto';
 import { UpdateWarehouseDto } from '../dto/update-warehouse.dto';
-import {
-  Reservation,
-  ReservationDocument,
-} from '../entities/reservation.entity';
+import { Reservation } from '../entities/reservation.entity';
 
 @Injectable()
 export class ReservationService {
   constructor(
-    @InjectModel(Reservation.name)
-    private reservationModel: Model<ReservationDocument>,
+    @InjectRepository(Reservation)
+    private reservationRepository: Repository<Reservation>,
   ) {}
 
   async create(reservation: CreateWarehouseDto): Promise<Reservation> {
-    const newReservation = new this.reservationModel(reservation);
-    return newReservation.save();
+    return await this.reservationRepository.save(prepareForCreate(reservation));
   }
 
   async readAll(): Promise<Reservation[]> {
-    return await this.reservationModel.find().exec();
+    return await this.reservationRepository.find();
   }
 
   async readById(id): Promise<Reservation> {
-    return await this.reservationModel.findById(id).exec();
+    return await this.reservationRepository.findOneBy(id);
   }
 
   async update(id, reservation: UpdateWarehouseDto): Promise<Reservation> {
-    return await this.reservationModel.findByIdAndUpdate(id, reservation, {
-      new: true,
-    });
+    await this.reservationRepository.update(id, prepareForUpdate(reservation));
+    return await this.readById(id);
   }
 
   async delete(id): Promise<any> {
-    return await this.reservationModel.findByIdAndRemove(id);
+    return await this.reservationRepository.remove(id);
   }
 }

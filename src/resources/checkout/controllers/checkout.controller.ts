@@ -7,13 +7,13 @@ import {
   Param,
   Delete,
 } from '@nestjs/common';
-import { CheckoutService } from '../services/checkout.service';
+import { CheckOutService } from '../services/checkout.service';
 import { CreateCheckoutDto } from '../dto/create-checkout.dto';
 import { UpdateCheckoutDto } from '../dto/update-checkout.dto';
 
 @Controller('checkout')
-export class CheckoutController {
-  constructor(private readonly checkoutService: CheckoutService) {}
+export class CheckOutController {
+  constructor(private readonly checkoutService: CheckOutService) {}
 
   @Post()
   create(@Body() createCheckoutDto: CreateCheckoutDto) {

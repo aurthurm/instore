@@ -1,51 +1,46 @@
 import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { InjectRepository } from '@nestjs/typeorm';
+import { prepareForCreate, prepareForUpdate } from 'src/helpers/entity.helpers';
+import { Repository } from 'typeorm';
 import { CreateWarehouseDto } from '../dto/create-warehouse.dto';
 import { UpdateWarehouseDto } from '../dto/update-warehouse.dto';
-import {
-  PreOrderReservation,
-  PreOrderReservationDocument,
-} from '../entities/preorder-reservation.entity';
+import { PreOrderReservation } from '../entities/preorder-reservation.entity';
 
 @Injectable()
 export class PreOrderReservationService {
   constructor(
-    @InjectModel(PreOrderReservation.name)
-    private preOrderReservationModel: Model<PreOrderReservationDocument>,
+    @InjectRepository(PreOrderReservation)
+    private preOrderReservationRepository: Repository<PreOrderReservation>,
   ) {}
 
   async create(
     preOrderReservation: CreateWarehouseDto,
   ): Promise<PreOrderReservation> {
-    const newPreOrderReservation = new this.preOrderReservationModel(
-      preOrderReservation,
+    return await this.preOrderReservationRepository.save(
+      prepareForCreate(preOrderReservation),
     );
-    return newPreOrderReservation.save();
   }
 
   async readAll(): Promise<PreOrderReservation[]> {
-    return await this.preOrderReservationModel.find().exec();
+    return await this.preOrderReservationRepository.find();
   }
 
   async readById(id): Promise<PreOrderReservation> {
-    return await this.preOrderReservationModel.findById(id).exec();
+    return await this.preOrderReservationRepository.findOneBy({ id });
   }
 
   async update(
     id,
     preOrderReservation: UpdateWarehouseDto,
   ): Promise<PreOrderReservation> {
-    return await this.preOrderReservationModel.findByIdAndUpdate(
+    await this.preOrderReservationRepository.update(
       id,
-      preOrderReservation,
-      {
-        new: true,
-      },
+      prepareForUpdate(preOrderReservation),
     );
+    return await this.readById(id);
   }
 
   async delete(id): Promise<any> {
-    return await this.preOrderReservationModel.findByIdAndRemove(id);
+    return await this.preOrderReservationRepository.remove(id);
   }
 }

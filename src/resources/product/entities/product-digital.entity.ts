@@ -1,29 +1,27 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { InStoreBase } from 'src/resources/base/base.entity';
+import { Entity, Column, ManyToOne } from 'typeorm';
 import { ProductVariant } from './product-variant.entity';
 
-export type ProductDigitalDocument = ProductDigital & Document;
-@Schema({
-  timestamps: true,
-})
-export class ProductDigital {
-  @Prop()
+@Entity('product_digital')
+export class ProductDigital extends InStoreBase {
+  @Column()
   automatic_fullfillment: boolean;
 
-  @Prop()
+  @Column()
   content_type: string;
 
-  @Prop()
+  @ManyToOne(
+    (type) => ProductVariant,
+    (product_variat) => product_variat.digitals,
+  )
   product_variant: ProductVariant;
 
-  @Prop()
+  @Column()
   content_file: string;
 
-  @Prop()
+  @Column()
   max_downloads: number;
 
-  @Prop()
+  @Column()
   url_valid_days: number;
 }
-
-export const ProductDigitalSchema =
-  SchemaFactory.createForClass(ProductDigital);

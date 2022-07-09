@@ -1,74 +1,67 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
-import { Role, UserRoles } from 'src/helpers/constants';
+import { InStoreBase } from 'src/resources/base/base.entity';
+import { CheckOut } from 'src/resources/checkout/entities/checkout.entity';
+import { Order } from 'src/resources/order/entities/order.entity';
+import { Entity, Column, OneToMany } from 'typeorm';
 
-export type UserDocument = User & Document;
+@Entity('user')
+export class User extends InStoreBase {
+  @Column({ length: 50, unique: true })
+  userName: string;
 
-@Schema({
-  timestamps: true,
-})
-export class User {
-  @Prop({
-    unique: true,
-  })
+  @Column({ length: 50, unique: true })
   email: string;
 
-  @Prop()
+  @Column({ length: 200, nullable: true })
   pin: string;
 
-  @Prop()
+  @Column({ length: 200, nullable: true })
   resetPinKey: string;
 
-  @Prop({
-    default: true,
-  })
+  @Column()
   requirePinChange: boolean;
 
-  @Prop()
+  @Column({ length: 200 })
   password: string;
 
-  @Prop()
+  @Column({ length: 200, nullable: true })
   resetPasswordKey: string;
 
-  @Prop({
-    default: true,
-  })
+  @Column()
   requirePasswordChange: boolean;
 
-  @Prop({
-    unique: true,
-  })
+  @Column({ length: 15, nullable: true })
   phone: string;
 
-  @Prop()
+  @Column({ length: 50 })
   firstName: string;
 
-  @Prop()
+  @Column({ length: 50, nullable: true })
   middleName: string;
 
-  @Prop()
+  @Column({ length: 50, nullable: true })
   lastName: string;
 
-  @Prop()
+  @Column({ length: 150, nullable: true })
   name: string;
 
-  @Prop()
+  @Column({ nullable: true })
   lastLogin: Date;
 
-  @Prop()
+  @Column({ nullable: true })
   lastPasswordReset: Date;
 
-  @Prop({
-    index: true,
-    type: [{ type: String, enum: UserRoles }],
-  })
-  roles: Role[];
+  @Column({ type: 'json' })
+  roles: string[];
 
-  @Prop()
+  @Column({ length: 20 })
   status: string;
 
-  @Prop()
+  @Column({ type: 'text', nullable: true })
   address: string;
-}
 
-export const UserSchema = SchemaFactory.createForClass(User);
+  @OneToMany((type) => Order, (order) => order.user)
+  orders: Order[];
+
+  @OneToMany((type) => CheckOut, (checkout) => checkout.user)
+  checkouts: CheckOut[];
+}

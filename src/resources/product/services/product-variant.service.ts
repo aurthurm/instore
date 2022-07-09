@@ -1,44 +1,38 @@
 import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { InjectRepository } from '@nestjs/typeorm';
+import { prepareForCreate, prepareForUpdate } from 'src/helpers/entity.helpers';
+import { Repository } from 'typeorm';
 import { CreateProductDto } from '../dto/create-product.dto';
 import { UpdateProductDto } from '../dto/update-product.dto';
-import {
-  ProductVariant,
-  ProductVariantDocument,
-} from '../entities/product-variant.entity';
+import { ProductVariant } from '../entities/product-variant.entity';
 
 @Injectable()
 export class ProductVariantService {
   constructor(
-    @InjectModel(ProductVariant.name)
-    private productVariantModel: Model<ProductVariantDocument>,
+    @InjectRepository(ProductVariant)
+    private productVariantRepository: Repository<ProductVariant>,
   ) {}
 
   async create(productVariant: CreateProductDto): Promise<ProductVariant> {
-    const newVariant = new this.productVariantModel(productVariant);
-    return newVariant.save();
+    return this.productVariantRepository.save(prepareForCreate(productVariant));
   }
 
-  async readAll(): Promise<ProductVariant[]> {
-    return await this.productVariantModel.find().exec();
+  async readAll(query = {}): Promise<ProductVariant[]> {
+    return await this.productVariantRepository.find(query);
   }
 
-  async readById(id): Promise<ProductVariant> {
-    return await this.productVariantModel.findById(id).exec();
+  async readById(id: string): Promise<ProductVariant> {
+    return await this.productVariantRepository.findOneBy({ id });
   }
 
-  async update(id, productVariant: UpdateProductDto): Promise<ProductVariant> {
-    return await this.productVariantModel.findByIdAndUpdate(
-      id,
-      productVariant,
-      {
-        new: true,
-      },
+  async update(id: string, productVariant: UpdateProductDto): Promise<any> {
+    return await this.productVariantRepository.update(
+      { id },
+      prepareForUpdate(productVariant),
     );
   }
 
   async delete(id): Promise<any> {
-    return await this.productVariantModel.findByIdAndRemove(id);
+    return await this.productVariantRepository.remove(id);
   }
 }

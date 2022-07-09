@@ -1,40 +1,36 @@
 import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { InjectRepository } from '@nestjs/typeorm';
+import { prepareForCreate, prepareForUpdate } from 'src/helpers/entity.helpers';
+import { Repository } from 'typeorm';
 import { CreateOrderDto } from '../dto/create-order.dto';
 import { UpdateOrderDto } from '../dto/update-order.dto';
-import {
-  OrderFullfilmentLine,
-  OrderFullfilmentLineDocument,
-} from '../entities/order-fullfillment-line.entity';
+import { OrderFullfilmentLine } from '../entities';
 
 @Injectable()
 export class OrderFullfilmentLineService {
   constructor(
-    @InjectModel(OrderFullfilmentLine.name)
-    private orderModel: Model<OrderFullfilmentLineDocument>,
+    @InjectRepository(OrderFullfilmentLine)
+    private orderRepository: Repository<OrderFullfilmentLine>,
   ) {}
 
   async create(order: CreateOrderDto): Promise<OrderFullfilmentLine> {
-    const newOrderFullfilmentLine = new this.orderModel(order);
-    return newOrderFullfilmentLine.save();
+    return this.orderRepository.save(prepareForCreate(order));
   }
 
   async readAll(): Promise<OrderFullfilmentLine[]> {
-    return await this.orderModel.find().exec();
+    return await this.orderRepository.find();
   }
 
   async readById(id): Promise<OrderFullfilmentLine> {
-    return await this.orderModel.findById(id).exec();
+    return await this.orderRepository.findOneBy({ id });
   }
 
   async update(id, order: UpdateOrderDto): Promise<OrderFullfilmentLine> {
-    return await this.orderModel.findByIdAndUpdate(id, order, {
-      new: true,
-    });
+    await this.orderRepository.update(id, prepareForUpdate(order));
+    return this.readById(id);
   }
 
   async delete(id): Promise<any> {
-    return await this.orderModel.findByIdAndRemove(id);
+    return await this.orderRepository.remove(id);
   }
 }

@@ -1,44 +1,45 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { SchemaTypes } from 'mongoose';
+import { InStoreBase } from 'src/resources/base/base.entity';
+import { Entity, Column, ManyToOne } from 'typeorm';
 import { ProductCategory } from './product-category.entity';
+import { ProductCollection } from './product-collection.entity';
 import { ProductType } from './product-type.entity';
 import { ProductVariant } from './product-variant.entity';
 
-export type ProductDocument = Product & Document;
-
-@Schema({
-  timestamps: true,
-})
-export class Product {
-  @Prop({ required: true, unique: true })
+@Entity('product')
+export class Product extends InStoreBase {
+  @Column({ length: 200 })
   name: string;
 
-  @Prop({ required: true, unique: true })
+  @Column({ length: 200 })
   slug: string;
 
-  @Prop()
+  @Column({ type: 'text', nullable: true })
   description: string;
 
-  @Prop({ type: SchemaTypes.ObjectId, ref: 'ProductType' })
+  @ManyToOne((type) => ProductType, (product_type) => product_type.products)
   product_type: ProductType;
 
-  @Prop({ type: SchemaTypes.ObjectId, ref: 'ProductCategory' })
+  @ManyToOne(
+    (type) => ProductCategory,
+    (product_category) => product_category.products,
+  )
   category: ProductCategory;
 
-  @Prop()
+  @Column({ length: 200, nullable: true })
   weight: string;
 
-  @Prop({
-    type: Number,
-    default: 4.5,
-    min: [1, 'Rating must be above 1.0'],
-    max: [5, 'Rating must be below 5.0'],
-    set: (val) => Math.round(val * 10) / 10,
-  })
+  @Column({ nullable: true })
   rating: number;
 
-  @Prop({ type: SchemaTypes.ObjectId, ref: 'ProductVariant' })
+  @ManyToOne(
+    (type) => ProductVariant,
+    (product_variant) => product_variant.products,
+  )
   default_variant: ProductVariant;
-}
 
-export const ProductSchema = SchemaFactory.createForClass(Product);
+  @ManyToOne(
+    (type) => ProductCollection,
+    (product_collection) => product_collection.products,
+  )
+  collection: ProductCollection;
+}

@@ -1,59 +1,62 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { SchemaTypes } from 'mongoose';
+import { InStoreBase } from 'src/resources/base/base.entity';
 import { User } from 'src/resources/user/entities/user.entity';
+import { Entity, Column, ManyToOne, OneToMany } from 'typeorm';
+import { OrderFullfilment } from './order-fullfilment.entity';
+import { OrderLine } from './order-line.entity';
 
-export type OrderDocument = Order & Document;
-
-@Schema({
-  timestamps: true,
-})
-export class Order {
-  @Prop()
+@Entity('order')
+export class Order extends InStoreBase {
+  @Column({ length: 50, unique: true })
   number: string;
 
-  @Prop()
+  @Column({ length: 20 })
   status: string;
 
-  @Prop()
+  @Column({ length: 20, nullable: true })
   authorise_status: string;
 
-  @Prop()
+  @Column({ length: 20, nullable: true })
   charge_status: string;
 
-  @Prop({ type: SchemaTypes.ObjectId, ref: 'User' })
+  @ManyToOne((type) => User, (user) => user.orders)
   user: User;
 
-  @Prop()
+  @Column({ length: 100 })
   tracking_id: string;
 
-  @Prop()
+  @Column({ length: 50, nullable: true })
   user_email: string;
 
-  @Prop()
+  @Column({ length: 100, nullable: true })
   origin: string;
 
-  @Prop()
+  @Column({ length: 10, nullable: true })
   currency: string;
 
-  @Prop()
+  @Column({ length: 255, nullable: true })
   shipping_method: string;
 
-  @Prop()
+  @Column({ length: 100, nullable: true })
   shipping_method_name: string;
 
-  @Prop()
+  @Column({ length: 255, nullable: true })
   collection_point: string; // WareHouse
 
-  @Prop()
+  @Column({ length: 100, nullable: true })
   collection_point_name: string;
 
-  @Prop()
+  @Column({ nullable: true })
   total_amount: number;
 
-  @Prop()
+  @Column({ type: 'text', nullable: true })
   customer_note: string;
 
-  @Prop()
+  @Column({ length: 20, nullable: true })
   weight: string;
+
+  @OneToMany((type) => OrderLine, (order_line) => order_line.order)
+  order_lines: OrderLine[];
+
+  @OneToMany((type) => OrderFullfilment, (fulfillment) => fulfillment.order)
+  fullfilments: OrderFullfilment;
 }
-export const OrderSchema = SchemaFactory.createForClass(Order);

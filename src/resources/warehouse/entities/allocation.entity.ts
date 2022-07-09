@@ -1,22 +1,16 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { SchemaTypes } from 'mongoose';
+import { InStoreBase } from 'src/resources/base/base.entity';
 import { OrderLine } from 'src/resources/order/entities/order-line.entity';
+import { Entity, Column, OneToMany } from 'typeorm';
 import { Stock } from './stock.entity';
 
-export type AllocationDocument = Allocation & Document;
+@Entity('allocation')
+export class Allocation extends InStoreBase {
+  @OneToMany((type) => OrderLine, (order_line) => order_line.allocation)
+  order_lines: OrderLine[];
 
-@Schema({
-  timestamps: true,
-})
-export class Allocation {
-  @Prop({ type: SchemaTypes.ObjectId, ref: 'OrderLine' })
-  order_line: OrderLine;
+  @OneToMany((type) => Stock, (stock) => stock.allocation)
+  stocks: Stock[];
 
-  @Prop({ type: SchemaTypes.ObjectId, ref: 'Stock' })
-  stock: Stock;
-
-  @Prop()
+  @Column()
   quantity_allocated: number;
 }
-
-export const AllocationSchema = SchemaFactory.createForClass(Allocation);

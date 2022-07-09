@@ -1,37 +1,53 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { InStoreBase } from 'src/resources/base/base.entity';
+import { CheckOutLine } from 'src/resources/checkout/entities/checkout-line.entity';
+import { OrderLine } from 'src/resources/order/entities/order-line.entity';
+import { WareHouse } from 'src/resources/warehouse/entities/warehouse.entity';
+import { Entity, Column, OneToMany, ManyToOne } from 'typeorm';
+import { ProductDigital } from './product-digital.entity';
+import { ProductMedia } from './product-media.entity';
+import { Product } from './product.entity';
 
-export type ProductVariantDocument = ProductVariant & Document;
-@Schema({
-  timestamps: true,
-})
-export class ProductVariant {
-  @Prop()
+@Entity('product_variant')
+export class ProductVariant extends InStoreBase {
+  @Column()
   sku: string;
 
-  @Prop()
+  @Column()
   name: string;
 
-  @Prop()
+  @Column()
   slug: string;
 
-  @Prop()
+  @Column()
   description: string;
 
-  @Prop()
-  media: [];
+  @OneToMany((type) => ProductMedia, (product_media) => product_media.product)
+  media: ProductMedia[];
 
-  @Prop()
+  @Column()
   is_pre_order: boolean;
 
-  @Prop()
+  @Column()
   ipre_order_end_date: boolean;
 
-  @Prop()
+  @Column()
   quantity_limit_per_customer: boolean;
 
-  @Prop()
+  @Column()
   weight: string;
-}
 
-export const ProductVariantSchema =
-  SchemaFactory.createForClass(ProductVariant);
+  @ManyToOne((type) => WareHouse, (warehouse) => warehouse.product_variants)
+  warehouse: WareHouse;
+
+  @OneToMany((type) => Product, (product) => product.default_variant)
+  products: Product[];
+
+  @OneToMany((type) => ProductDigital, (product) => product.product_variant)
+  digitals: ProductDigital[];
+
+  @OneToMany((type) => OrderLine, (order_line) => order_line.variant)
+  order_lines: OrderLine[];
+
+  @OneToMany((type) => CheckOutLine, (checkout_line) => checkout_line.variant)
+  checkout_lines: CheckOutLine[];
+}

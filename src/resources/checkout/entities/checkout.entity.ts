@@ -1,37 +1,35 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { SchemaTypes } from 'mongoose';
+import { InStoreBase } from 'src/resources/base/base.entity';
+import { CheckOutLine } from 'src/resources/checkout/entities/checkout-line.entity';
 import { User } from 'src/resources/user/entities/user.entity';
 import { WareHouse } from 'src/resources/warehouse/entities/warehouse.entity';
+import { Entity, Column, OneToMany, ManyToOne } from 'typeorm';
 
-export type CheckOutDocument = CheckOut & Document;
-
-@Schema({
-  timestamps: true,
-})
-export class CheckOut {
-  @Prop()
+@Entity('check_out')
+export class CheckOut extends InStoreBase {
+  @Column()
   last_change: Date;
 
-  @Prop({ type: SchemaTypes.ObjectId, red: 'User' })
-  user: User;
-
-  @Prop()
+  @Column()
   email: string;
 
-  @Prop()
+  @Column()
   token: string;
 
-  @Prop({ type: SchemaTypes.ObjectId, red: 'WareHouse' })
-  collection_point: WareHouse;
-
-  @Prop()
+  @Column()
   note: string;
 
-  @Prop()
+  @Column()
   currency: string;
 
-  @Prop()
+  @Column()
   tracking_code: string;
-}
 
-export const CheckOutSchema = SchemaFactory.createForClass(CheckOut);
+  @ManyToOne((type) => User, (user) => user.checkouts)
+  user: User;
+
+  @ManyToOne((type) => WareHouse, (warehouse) => warehouse.checkouts)
+  collection_point: WareHouse;
+
+  @OneToMany((type) => CheckOutLine, (checkout_line) => checkout_line.variant)
+  checkout_lines: CheckOutLine;
+}

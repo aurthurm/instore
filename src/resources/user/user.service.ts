@@ -1,62 +1,61 @@
-import { Injectable, Logger } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
+import { v4 as uuidV4 } from 'uuid';
 
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { User, UserDocument } from './entities/user.entity';
-import { Request } from 'express';
+import { User } from './entities/user.entity';
 
 @Injectable()
 export class UserService {
   SALT_ROUNS = 10;
 
-  constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
+  constructor(
+    @InjectRepository(User) private userRepository: Repository<User>,
+  ) {}
 
-  async create(createUserDto: CreateUserDto) {
-    const createUser = new this.userModel(createUserDto);
-    createUser.pin = await bcrypt.hash(createUser.pin, this.SALT_ROUNS);
-    createUser.password = await bcrypt.hash(
-      createUser.password,
-      this.SALT_ROUNS,
-    );
-    return createUser.save();
+  async create(userDto: CreateUserDto): Promise<User> {
+    return await this.userRepository.save({
+      ...userDto,
+      id: uuidV4(),
+      requirePinChange: false,
+      requirePasswordChange: false,
+      pin: await bcrypt.hash(userDto.pin, this.SALT_ROUNS),
+      password: await bcrypt.hash(userDto.password, this.SALT_ROUNS),
+    });
   }
 
   async findAll(query = {}) {
-    console.log(query);
-    return await this.userModel.find(query).exec();
+    return await this.userRepository.find(query);
   }
 
   async findOne(id: string) {
-    return await this.userModel.findById(id).lean();
+    return await this.userRepository.findOneBy({ id });
+  }
+
+  async findOneBy(query = {}) {
+    return await this.userRepository.findOneBy(query);
   }
 
   async findByEmailOrPhone(payload: string) {
-    return await this.userModel
-      .findOne({
-        $or: [{ phone: payload }, { email: payload }],
-      })
-      .lean();
+    return await this.userRepository.findOne({
+      where: [{ phone: payload }, { email: payload }],
+    });
   }
 
   async findByResetKey(resetKey: string) {
-    return await this.userModel
-      .findOne({
-        $or: [{ resetPasswordKey: resetKey }, { resetPinKey: resetKey }],
-      })
-      .lean();
+    return await this.userRepository.findOne({
+      where: [{ resetPasswordKey: resetKey }, { resetPinKey: resetKey }],
+    });
   }
 
-  update(id: string, updateUserDto: UpdateUserDto) {
-    return this.userModel
-      .findByIdAndUpdate(id, updateUserDto)
-      .setOptions({ new: true })
-      .exec();
+  async update(id: string, userDto: UpdateUserDto) {
+    return this.userRepository.update({ id }, userDto);
   }
 
   remove(id: string) {
-    return this.userModel.findByIdAndDelete(id);
+    return this.userRepository.delete(id);
   }
 }
