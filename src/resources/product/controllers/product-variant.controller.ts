@@ -10,35 +10,43 @@ import {
   HttpStatus,
   Put,
 } from '@nestjs/common';
-import { ProductService } from '../services/product.service';
-import { CreateProductDto } from '../dto/create-product.dto';
-import { UpdateProductDto } from '../dto/update-product.dto';
+import { ProductVariantService } from '../services/product-variant.service';
+import { CreateProductVariantsDto } from '../dto/create-product-variant.dto';
+import { UpdateProductVariantDto } from '../dto/update-product-variant.dto';
+import { ApiTags } from '@nestjs/swagger';
 
-@Controller('product-variant')
+@Controller('api/product-variant')
+@ApiTags('Product Variant')
 export class ProductVariantController {
-  constructor(private readonly productService: ProductService) {}
+  constructor(private readonly productVariantService: ProductVariantService) {}
 
   @Post()
-  async createProduct(@Res() response, @Body() product: CreateProductDto) {
-    const newProduct = await this.productService.create(product);
+  async createVariant(
+    @Res() response,
+    @Body() productVariant: CreateProductVariantsDto,
+  ) {
+    const newProductVariants = await this.productVariantService.create(
+      productVariant,
+    );
     return response.status(HttpStatus.CREATED).json({
-      newProduct,
+      count: newProductVariants.length,
+      items: newProductVariants,
     });
   }
 
   @Get()
   async fetchAll(@Res() response) {
-    const products = await this.productService.readAll();
+    const productVariants = await this.productVariantService.readAll();
     return response.status(HttpStatus.OK).json({
-      products,
+      productVariants,
     });
   }
 
   @Get('/:id')
   async findById(@Res() response, @Param('id') id) {
-    const product = await this.productService.readById(id);
+    const productVariant = await this.productVariantService.readById(id);
     return response.status(HttpStatus.OK).json({
-      product,
+      item: productVariant,
     });
   }
 
@@ -46,19 +54,22 @@ export class ProductVariantController {
   async update(
     @Res() response,
     @Param('id') id,
-    @Body() product: UpdateProductDto,
+    @Body() productVariant: UpdateProductVariantDto,
   ) {
-    const updatedProduct = await this.productService.update(id, product);
+    const updatedProductVariant = await this.productVariantService.update(
+      id,
+      productVariant,
+    );
     return response.status(HttpStatus.OK).json({
-      updatedProduct,
+      item: updatedProductVariant,
     });
   }
 
   @Delete('/:id')
-  async delete(@Res() response, @Param('id') id) {
-    const deletedProduct = await this.productService.delete(id);
+  async delete(@Res() response, @Param('id') id: string) {
+    const deletedProductVariant = await this.productVariantService.delete(id);
     return response.status(HttpStatus.OK).json({
-      deletedProduct,
+      item: deletedProductVariant,
     });
   }
 }

@@ -4,7 +4,7 @@ import { Product } from './product.entity';
 
 @Entity('product_type')
 export class ProductType extends InStoreBase {
-  @Column()
+  @Column({ unique: true, nullable: false })
   name: string;
 
   @Column()

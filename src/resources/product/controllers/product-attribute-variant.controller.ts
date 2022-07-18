@@ -14,21 +14,28 @@ import {
   ParseIntPipe,
 } from '@nestjs/common';
 import {
-  CreateProductTypeDto,
-  ProductTypeFilter,
-} from '../dto/create-product-type.dto';
-import { UpdateProductTypeDto } from '../dto/update-product-type.dto';
+  CreateProductVariantAttributeDto,
+  ProductVariantAttributeFilter,
+} from '../dto/create-product-variant-attribute.dto';
+import { UpdateProductVariantAttributeDto } from '../dto/update-product-variant-attribute.dto';
 import { ApiTags } from '@nestjs/swagger';
-import { ProductTypeService } from '../services';
+import { ProductVariantAttributeService } from '../services';
 
-@Controller('api/product-type')
-@ApiTags('Product Type')
-export class ProductTypeController {
-  constructor(private readonly productTypeService: ProductTypeService) {}
+@Controller('api/product-variant-attribute')
+@ApiTags('Product Variant Attribute')
+export class ProductVariantAttributeController {
+  constructor(
+    private readonly productVariantAttributeService: ProductVariantAttributeService,
+  ) {}
 
   @Post()
-  async createProduct(@Res() response, @Body() product: CreateProductTypeDto) {
-    const newProduct = await this.productTypeService.create(product);
+  async createProduct(
+    @Res() response,
+    @Body() product: CreateProductVariantAttributeDto,
+  ) {
+    const newProduct = await this.productVariantAttributeService.create(
+      product,
+    );
     return response.status(HttpStatus.CREATED).json({
       item: newProduct,
     });
@@ -36,14 +43,14 @@ export class ProductTypeController {
 
   @Get()
   async fetchAll(
-    @Query() filters: ProductTypeFilter,
+    @Query() filters: ProductVariantAttributeFilter,
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page = 1,
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit = 10,
     @Res() response,
     @Request() request,
   ) {
     limit = limit > 100 ? 100 : limit;
-    const pagination = await this.productTypeService.readAll(
+    const pagination = await this.productVariantAttributeService.readAll(
       {
         page,
         limit,
@@ -56,7 +63,7 @@ export class ProductTypeController {
 
   @Get('/:id')
   async findById(@Res() response, @Param('id') id) {
-    const product = await this.productTypeService.readById(id);
+    const product = await this.productVariantAttributeService.readById(id);
     return response.status(HttpStatus.OK).json({
       item: product,
     });
@@ -66,9 +73,12 @@ export class ProductTypeController {
   async update(
     @Res() response,
     @Param('id') id,
-    @Body() product: UpdateProductTypeDto,
+    @Body() product: UpdateProductVariantAttributeDto,
   ) {
-    const updatedProduct = await this.productTypeService.update(id, product);
+    const updatedProduct = await this.productVariantAttributeService.update(
+      id,
+      product,
+    );
     return response.status(HttpStatus.OK).json({
       item: updatedProduct,
     });
@@ -76,7 +86,7 @@ export class ProductTypeController {
 
   @Delete('/:id')
   async delete(@Res() response, @Param('id') id: string) {
-    const deletedProduct = await this.productTypeService.delete(id);
+    const deletedProduct = await this.productVariantAttributeService.delete(id);
     return response.status(HttpStatus.OK).json({
       item: deletedProduct,
     });

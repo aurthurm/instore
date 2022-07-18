@@ -1,7 +1,8 @@
 import * as uuid from 'uuid';
 
-export const prepareForCreate = (data: any) => {
-  return Object.assign({}, { ...data, id: uuid.v4() });
+export const prepareForCreate = (data: any, dto: any = undefined) => {
+  const obj = dto === undefined ? {} : new dto();
+  return Object.assign(obj, { ...data, id: uuid.v4() });
 };
 
 export const prepareForUpdate = (data: any, exclude = []) => {

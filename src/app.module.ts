@@ -7,8 +7,6 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
 import { MongooseModule } from '@nestjs/mongoose';
-import { UserModule } from './resources/user/user.module';
-import { AuthModule } from './resources/auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
 import { RolesGuard } from './resources/auth/roles.guard';
 import config from 'ormconfig';
@@ -18,6 +16,7 @@ import { PRODUCT_ENTITIES } from './resources/product/entities';
 import { WAREHOUSE_ENTITIES } from './resources/warehouse/entities';
 import { ORDER_ENTITIES } from './resources/order/entities';
 import { CHECKOUT_ENTITIES } from './resources/checkout/entities';
+import { RESOURCE_MODULES } from './resources';
 
 @Module({
   imports: [
@@ -31,7 +30,7 @@ import { CHECKOUT_ENTITIES } from './resources/checkout/entities';
         ...PRODUCT_ENTITIES,
       ],
     }),
-    MongooseModule.forRoot('mongodb://192.168.122.185/storefront'),
+    MongooseModule.forRoot('mongodb://127.0.0.1/instore'),
     MailerModule.forRoot({
       transport: {
         host: 'localhost',
@@ -55,8 +54,7 @@ import { CHECKOUT_ENTITIES } from './resources/checkout/entities';
         },
       },
     }),
-    AuthModule,
-    UserModule,
+    ...RESOURCE_MODULES,
   ],
   controllers: [AppController],
   providers: [

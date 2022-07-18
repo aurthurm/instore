@@ -1,5 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNumber, IsObject, IsString, IsUUID } from 'class-validator';
+import {
+  IsNumber,
+  IsObject,
+  IsOptional,
+  IsString,
+  IsUUID,
+} from 'class-validator';
 import { User } from 'src/resources/user/entities/user.entity';
 import { ProductCategory } from '../entities/product-category.entity';
 import { ProductType } from '../entities/product-type.entity';
@@ -10,12 +16,14 @@ export class CreateProductDto implements Readonly<CreateProductDto> {
   @IsUUID()
   id: string;
 
-  @ApiProperty({})
   @IsString()
+  @IsOptional()
+  @ApiProperty()
   name: string;
 
-  @ApiProperty({})
   @IsString()
+  @IsOptional()
+  @ApiProperty()
   slug: string;
 
   @ApiProperty({ type: 'text' })
@@ -28,8 +36,9 @@ export class CreateProductDto implements Readonly<CreateProductDto> {
   @ApiProperty({})
   category: ProductCategory;
 
-  @ApiProperty({})
   @IsString()
+  @IsOptional()
+  @ApiProperty()
   weight: string;
 
   @ApiProperty({})
@@ -38,7 +47,7 @@ export class CreateProductDto implements Readonly<CreateProductDto> {
 
   @ApiProperty({})
   @IsObject()
-  default_variant: ProductVariant;
+  variants: ProductVariant[];
 
   @ApiProperty({ required: true })
   @IsString()
@@ -72,4 +81,41 @@ export class CreateProductDto implements Readonly<CreateProductDto> {
     it.createdBy = user ? user.id : null;
     return it;
   }
+}
+
+export class ProductFilter {
+  @IsString()
+  @IsOptional()
+  @ApiProperty()
+  name: string;
+
+  @IsString()
+  @IsOptional()
+  @ApiProperty()
+  slug: string;
+
+  @IsString()
+  @IsOptional()
+  @ApiProperty()
+  description: string;
+
+  @IsString()
+  @IsOptional()
+  @ApiProperty()
+  product_type: string;
+
+  @IsString()
+  @IsOptional()
+  @ApiProperty()
+  category: string;
+
+  @IsString()
+  @IsOptional()
+  @ApiProperty()
+  weight: string;
+
+  @IsString()
+  @IsOptional()
+  @ApiProperty()
+  rating: number;
 }

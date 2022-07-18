@@ -1,5 +1,6 @@
+import { ProductAttribute } from './product-attribute.entity';
 import { InStoreBase } from 'src/resources/base/base.entity';
-import { Entity, Column, ManyToOne } from 'typeorm';
+import { Entity, Column, ManyToOne, OneToMany } from 'typeorm';
 import { ProductCategory } from './product-category.entity';
 import { ProductCollection } from './product-collection.entity';
 import { ProductType } from './product-type.entity';
@@ -7,21 +8,24 @@ import { ProductVariant } from './product-variant.entity';
 
 @Entity('product')
 export class Product extends InStoreBase {
-  @Column({ length: 200 })
+  @Column({ length: 200, unique: true, nullable: false })
   name: string;
 
-  @Column({ length: 200 })
+  @Column({ length: 200, unique: true })
   slug: string;
 
   @Column({ type: 'text', nullable: true })
   description: string;
 
-  @ManyToOne((type) => ProductType, (product_type) => product_type.products)
+  @ManyToOne((type) => ProductType, (product_type) => product_type.products, {
+    nullable: true,
+  })
   product_type: ProductType;
 
   @ManyToOne(
     (type) => ProductCategory,
     (product_category) => product_category.products,
+    { nullable: true },
   )
   category: ProductCategory;
 
@@ -31,15 +35,22 @@ export class Product extends InStoreBase {
   @Column({ nullable: true })
   rating: number;
 
-  @ManyToOne(
+  @OneToMany(
     (type) => ProductVariant,
-    (product_variant) => product_variant.products,
+    (product_variant) => product_variant.product,
   )
-  default_variant: ProductVariant;
+  variants: ProductVariant[];
+
+  @OneToMany(
+    (type) => ProductAttribute,
+    (product_attribute) => product_attribute.product,
+  )
+  attributes: ProductAttribute[];
 
   @ManyToOne(
     (type) => ProductCollection,
     (product_collection) => product_collection.products,
+    { nullable: true },
   )
   collection: ProductCollection;
 }

@@ -10,29 +10,29 @@ import { ProductDigital } from '../entities/product-digital.entity';
 export class ProductDigitalService {
   constructor(
     @InjectRepository(ProductDigital)
-    private productRepository: Repository<ProductDigital>,
+    private productMediaRepository: Repository<ProductDigital>,
   ) {}
 
   async create(productDigital: CreateProductDto): Promise<ProductDigital> {
-    return this.productRepository.save(prepareForCreate(productDigital));
+    return this.productMediaRepository.save(prepareForCreate(productDigital));
   }
 
   async readAll(): Promise<ProductDigital[]> {
-    return await this.productRepository.find();
+    return await this.productMediaRepository.find();
   }
 
   async readById(id: string): Promise<ProductDigital> {
-    return await this.productRepository.findOneBy({ id });
+    return await this.productMediaRepository.findOneBy({ id });
   }
 
   async update(id: string, productDigital: UpdateProductDto): Promise<any> {
-    return await this.productRepository.update(
+    return await this.productMediaRepository.update(
       id,
       prepareForUpdate(productDigital),
     );
   }
 
   async delete(id): Promise<any> {
-    return await this.productRepository.remove(id);
+    return await this.productMediaRepository.delete(id);
   }
 }

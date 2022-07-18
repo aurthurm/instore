@@ -1,40 +1,40 @@
-import { UpdateProductCategoryDto } from './../dto/update-product-category.dto';
-import {
-  ProductCategoryFilter,
-  CreateProductCategoryDto,
-} from './../dto/create-product-category.dto';
-import { ProductCategoryService } from './../services/product-category.service';
 import {
   Controller,
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Delete,
   Res,
   HttpStatus,
   Put,
-  DefaultValuePipe,
-  ParseIntPipe,
   Query,
   Request,
+  DefaultValuePipe,
+  ParseIntPipe,
+  Logger,
 } from '@nestjs/common';
+import {
+  CreateProductAttributeDto,
+  ProductAttributeFilter,
+} from '../dto/create-product-attribute.dto';
+import { UpdateProductAttributeDto } from '../dto/update-product-attribute.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { ProductAttributeService } from '../services';
 
-@Controller('api/product-category')
-@ApiTags('Product Category')
-export class ProductCategoryController {
+@Controller('api/product-attribute')
+@ApiTags('Product Attribute')
+export class ProductAttributeController {
   constructor(
-    private readonly productCategoryService: ProductCategoryService,
+    private readonly productAttributeService: ProductAttributeService,
   ) {}
 
   @Post()
   async createProduct(
     @Res() response,
-    @Body() product: CreateProductCategoryDto,
+    @Body() product: CreateProductAttributeDto,
   ) {
-    const newProduct = await this.productCategoryService.create(product);
+    const newProduct = await this.productAttributeService.create(product);
     return response.status(HttpStatus.CREATED).json({
       item: newProduct,
     });
@@ -42,14 +42,14 @@ export class ProductCategoryController {
 
   @Get()
   async fetchAll(
-    @Query() filters: ProductCategoryFilter,
+    @Query() filters: ProductAttributeFilter,
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page = 1,
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit = 10,
     @Res() response,
     @Request() request,
   ) {
     limit = limit > 100 ? 100 : limit;
-    const pagination = await this.productCategoryService.readAll(
+    const pagination = await this.productAttributeService.readAll(
       {
         page,
         limit,
@@ -60,9 +60,19 @@ export class ProductCategoryController {
     return response.status(HttpStatus.OK).json(pagination);
   }
 
+  @Get('/filter')
+  async filter(@Res() response, @Query() filters: ProductAttributeFilter) {
+    console.log(filters);
+    Logger.log(filters);
+    const results = await this.productAttributeService.readBy(filters);
+    return response.status(HttpStatus.OK).json({
+      items: results,
+    });
+  }
+
   @Get('/:id')
   async findById(@Res() response, @Param('id') id) {
-    const product = await this.productCategoryService.readById(id);
+    const product = await this.productAttributeService.readById(id);
     return response.status(HttpStatus.OK).json({
       item: product,
     });
@@ -72,9 +82,9 @@ export class ProductCategoryController {
   async update(
     @Res() response,
     @Param('id') id,
-    @Body() product: UpdateProductCategoryDto,
+    @Body() product: UpdateProductAttributeDto,
   ) {
-    const updatedProduct = await this.productCategoryService.update(
+    const updatedProduct = await this.productAttributeService.update(
       id,
       product,
     );
@@ -85,7 +95,7 @@ export class ProductCategoryController {
 
   @Delete('/:id')
   async delete(@Res() response, @Param('id') id: string) {
-    const deletedProduct = await this.productCategoryService.delete(id);
+    const deletedProduct = await this.productAttributeService.delete(id);
     return response.status(HttpStatus.OK).json({
       item: deletedProduct,
     });

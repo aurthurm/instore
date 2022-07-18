@@ -10,11 +10,13 @@ import {
   Put,
   Res,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { CreateWarehouseDto } from '../dto/create-warehouse.dto';
 import { UpdateWarehouseDto } from '../dto/update-warehouse.dto';
 import { AllocationService } from '../services/allocation.service';
 
-@Controller('allocation')
+@Controller('api/allocation')
+@ApiTags('Allocation')
 export class AllocationController {
   constructor(private readonly allocationService: AllocationService) {}
 

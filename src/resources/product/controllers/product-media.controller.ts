@@ -1,3 +1,4 @@
+import { ProductMediaService } from './../services/product-media.service';
 import {
   Controller,
   Get,
@@ -13,14 +14,16 @@ import {
 import { ProductService } from '../services/product.service';
 import { CreateProductDto } from '../dto/create-product.dto';
 import { UpdateProductDto } from '../dto/update-product.dto';
+import { ApiTags } from '@nestjs/swagger';
 
-@Controller('product-media')
+@Controller('api/product-media')
+@ApiTags('Product Media')
 export class ProductMediaController {
-  constructor(private readonly productService: ProductService) {}
+  constructor(private readonly productMediaService: ProductMediaService) {}
 
   @Post()
   async createProduct(@Res() response, @Body() product: CreateProductDto) {
-    const newProduct = await this.productService.create(product);
+    const newProduct = await this.productMediaService.create(product);
     return response.status(HttpStatus.CREATED).json({
       newProduct,
     });
@@ -28,7 +31,7 @@ export class ProductMediaController {
 
   @Get()
   async fetchAll(@Res() response) {
-    const products = await this.productService.readAll();
+    const products = await this.productMediaService.readAll();
     return response.status(HttpStatus.OK).json({
       products,
     });
@@ -36,7 +39,7 @@ export class ProductMediaController {
 
   @Get('/:id')
   async findById(@Res() response, @Param('id') id) {
-    const product = await this.productService.readById(id);
+    const product = await this.productMediaService.readById(id);
     return response.status(HttpStatus.OK).json({
       product,
     });
@@ -48,15 +51,15 @@ export class ProductMediaController {
     @Param('id') id,
     @Body() product: UpdateProductDto,
   ) {
-    const updatedProduct = await this.productService.update(id, product);
+    const updatedProduct = await this.productMediaService.update(id, product);
     return response.status(HttpStatus.OK).json({
       updatedProduct,
     });
   }
 
   @Delete('/:id')
-  async delete(@Res() response, @Param('id') id) {
-    const deletedProduct = await this.productService.delete(id);
+  async delete(@Res() response, @Param('id') id: string) {
+    const deletedProduct = await this.productMediaService.delete(id);
     return response.status(HttpStatus.OK).json({
       deletedProduct,
     });

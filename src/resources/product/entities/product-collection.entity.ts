@@ -4,10 +4,10 @@ import { Product } from './product.entity';
 
 @Entity('product_collection')
 export class ProductCollection extends InStoreBase {
-  @Column()
+  @Column({ unique: true, nullable: false })
   name: string;
 
-  @Column()
+  @Column({ unique: true, nullable: false })
   slug: string;
 
   @OneToMany((type) => Product, (product) => product.collection)

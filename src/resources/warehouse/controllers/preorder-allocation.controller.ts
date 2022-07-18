@@ -10,11 +10,13 @@ import {
   Put,
   Res,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { CreateWarehouseDto } from '../dto/create-warehouse.dto';
 import { UpdateWarehouseDto } from '../dto/update-warehouse.dto';
 import { PreOrderAllocationService } from '../services/preorder-allocation.service';
 
-@Controller('preorder-allocation')
+@Controller('api/preorder-allocation')
+@ApiTags('PreOrdr Allocation')
 export class PreOrderAllocationController {
   constructor(
     private readonly preOrderAllocationService: PreOrderAllocationService,

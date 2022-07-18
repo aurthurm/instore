@@ -13,8 +13,10 @@ import {
 import { WareHouseService } from '../services/warehouse.service';
 import { CreateWarehouseDto } from '../dto/create-warehouse.dto';
 import { UpdateWarehouseDto } from '../dto/update-warehouse.dto';
+import { ApiTags } from '@nestjs/swagger';
 
-@Controller('warehouse')
+@Controller('api/warehouse')
+@ApiTags('WareHouse')
 export class WareHouseController {
   constructor(private readonly productService: WareHouseService) {}
 

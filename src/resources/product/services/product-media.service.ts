@@ -10,29 +10,29 @@ import { ProductMedia } from '../entities/product-media.entity';
 export class ProductMediaService {
   constructor(
     @InjectRepository(ProductMedia)
-    private productRepository: Repository<ProductMedia>,
+    private productMediaRepository: Repository<ProductMedia>,
   ) {}
 
   async create(productMedia: CreateProductDto): Promise<ProductMedia> {
-    return this.productRepository.save(prepareForCreate(productMedia));
+    return this.productMediaRepository.save(prepareForCreate(productMedia));
   }
 
   async readAll(query = {}): Promise<ProductMedia[]> {
-    return await this.productRepository.find(query);
+    return await this.productMediaRepository.find(query);
   }
 
   async readById(id: string): Promise<ProductMedia> {
-    return await this.productRepository.findOneBy({ id });
+    return await this.productMediaRepository.findOneBy({ id });
   }
 
   async update(id: string, productMedia: UpdateProductDto): Promise<any> {
-    return await this.productRepository.update(
+    return await this.productMediaRepository.update(
       { id },
       prepareForUpdate(productMedia),
     );
   }
 
   async delete(id): Promise<any> {
-    return await this.productRepository.remove(id);
+    return await this.productMediaRepository.delete(id);
   }
 }

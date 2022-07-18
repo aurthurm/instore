@@ -1,3 +1,6 @@
+import { ProductVariantMeta } from 'src/resources/product/entities/product-variant-meta.entity';
+import { ProductVariantAttribute } from './product-variant-attribute.entity';
+import { ProductAttribute } from './product-attribute.entity';
 import { Product } from './product.entity';
 import { ProductVariant } from './product-variant.entity';
 import { ProductCategory } from './product-category.entity';
@@ -8,6 +11,9 @@ import { ProductMedia } from './product-media.entity';
 
 const PRODUCT_ENTITIES = [
   Product,
+  ProductAttribute,
+  ProductVariantAttribute,
+  ProductVariantMeta,
   ProductVariant,
   ProductType,
   ProductCategory,
@@ -18,6 +24,9 @@ const PRODUCT_ENTITIES = [
 
 export {
   Product,
+  ProductAttribute,
+  ProductVariantAttribute,
+  ProductVariantMeta,
   ProductVariant,
   ProductType,
   ProductCategory,

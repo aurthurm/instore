@@ -10,31 +10,33 @@ import { prepareForCreate, prepareForUpdate } from 'src/helpers/entity.helpers';
 export class ProductCollectionService {
   constructor(
     @InjectRepository(ProductCollection)
-    private productRepository: Repository<ProductCollection>,
+    private productCollectionRepository: Repository<ProductCollection>,
   ) {}
 
   async create(
     productCollection: CreateProductDto,
   ): Promise<ProductCollection> {
-    return this.productRepository.save(prepareForCreate(productCollection));
+    return this.productCollectionRepository.save(
+      prepareForCreate(productCollection),
+    );
   }
 
   async readAll(): Promise<ProductCollection[]> {
-    return await this.productRepository.find();
+    return await this.productCollectionRepository.find();
   }
 
   async readById(id: string): Promise<ProductCollection> {
-    return await this.productRepository.findOneBy({ id });
+    return await this.productCollectionRepository.findOneBy({ id });
   }
 
   async update(id, productCollection: UpdateProductDto): Promise<UpdateResult> {
-    return await this.productRepository.update(
+    return await this.productCollectionRepository.update(
       id,
       prepareForUpdate(productCollection),
     );
   }
 
   async delete(id): Promise<any> {
-    return await this.productRepository.remove(id);
+    return await this.productCollectionRepository.delete(id);
   }
 }

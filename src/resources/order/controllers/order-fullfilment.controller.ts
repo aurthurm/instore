@@ -10,11 +10,13 @@ import {
   HttpStatus,
   Put,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { CreateOrderDto } from '../dto/create-order.dto';
 import { UpdateOrderDto } from '../dto/update-order.dto';
 import { OrderFullfilmentService } from '../services/order-fullfilment.service';
 
-@Controller('order-fulfillment')
+@Controller('api/order-fulfillment')
+@ApiTags('Order Fullfilment')
 export class OrderFullfilmentController {
   constructor(private readonly productService: OrderFullfilmentService) {}
 

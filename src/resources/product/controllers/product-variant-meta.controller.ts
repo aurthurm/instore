@@ -3,30 +3,37 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Delete,
   Res,
   HttpStatus,
   Put,
-  DefaultValuePipe,
-  ParseIntPipe,
   Query,
   Request,
+  DefaultValuePipe,
+  ParseIntPipe,
 } from '@nestjs/common';
-import { ProductService } from '../services/product.service';
-import { CreateProductDto, ProductFilter } from '../dto/create-product.dto';
-import { UpdateProductDto } from '../dto/update-product.dto';
+import {
+  CreateProductVariantMetaDto,
+  ProductVariantMetaFilter,
+} from '../dto/create-product-variant-meta.dto';
+import { UpdateProductVariantMetaDto } from '../dto/update-product-variant-meta.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { ProductVariantMetaService } from '../services';
 
-@Controller('api/product')
-@ApiTags('Product')
-export class ProductController {
-  constructor(private readonly productService: ProductService) {}
+@Controller('api/product-variant-meta')
+@ApiTags('Product Variant Meta')
+export class ProductVariantMetaController {
+  constructor(
+    private readonly productVariantMetaService: ProductVariantMetaService,
+  ) {}
 
   @Post()
-  async createProduct(@Res() response, @Body() product: CreateProductDto) {
-    const newProduct = await this.productService.create(product);
+  async createProduct(
+    @Res() response,
+    @Body() product: CreateProductVariantMetaDto,
+  ) {
+    const newProduct = await this.productVariantMetaService.create(product);
     return response.status(HttpStatus.CREATED).json({
       item: newProduct,
     });
@@ -34,14 +41,14 @@ export class ProductController {
 
   @Get()
   async fetchAll(
-    @Query() filters: ProductFilter,
+    @Query() filters: ProductVariantMetaFilter,
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page = 1,
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit = 10,
     @Res() response,
     @Request() request,
   ) {
     limit = limit > 100 ? 100 : limit;
-    const pagination = await this.productService.readAll(
+    const pagination = await this.productVariantMetaService.readAll(
       {
         page,
         limit,
@@ -54,7 +61,7 @@ export class ProductController {
 
   @Get('/:id')
   async findById(@Res() response, @Param('id') id) {
-    const product = await this.productService.readById(id);
+    const product = await this.productVariantMetaService.readById(id);
     return response.status(HttpStatus.OK).json({
       item: product,
     });
@@ -64,9 +71,12 @@ export class ProductController {
   async update(
     @Res() response,
     @Param('id') id,
-    @Body() product: UpdateProductDto,
+    @Body() product: UpdateProductVariantMetaDto,
   ) {
-    const updatedProduct = await this.productService.update(id, product);
+    const updatedProduct = await this.productVariantMetaService.update(
+      id,
+      product,
+    );
     return response.status(HttpStatus.OK).json({
       item: updatedProduct,
     });
@@ -74,7 +84,7 @@ export class ProductController {
 
   @Delete('/:id')
   async delete(@Res() response, @Param('id') id: string) {
-    const deletedProduct = await this.productService.delete(id);
+    const deletedProduct = await this.productVariantMetaService.delete(id);
     return response.status(HttpStatus.OK).json({
       item: deletedProduct,
     });

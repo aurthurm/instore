@@ -10,11 +10,13 @@ import {
   Put,
   Res,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { CreateWarehouseDto } from '../dto/create-warehouse.dto';
 import { UpdateWarehouseDto } from '../dto/update-warehouse.dto';
 import { ReservationService } from '../services/reservation.service';
 
-@Controller('reservation')
+@Controller('api/reservation')
+@ApiTags('Reservation')
 export class ReservationController {
   constructor(private readonly reservationService: ReservationService) {}
 
