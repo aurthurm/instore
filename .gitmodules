@@ -1,0 +1,6 @@
+[submodule "instore-nest-backend"]
+	path = instore-nest-backend
+	url = https://github.com/aurthurm/instore-nest-backend.git
+[submodule "instore-angular-frontend"]
+	path = instore-angular-frontend
+	url = https://github.com/aurthurm/instore-angular-frontend.git
