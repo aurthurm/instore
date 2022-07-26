@@ -1,3 +1,4 @@
+import { ProductVariantStockService } from './product-variant-stock.service';
 import { ProductVariantMetaService } from './product-variant-meta.service';
 import { ProductVariantAttributeService } from './product-attribute-variant.service';
 import { ProductService } from './product.service';
@@ -14,6 +15,7 @@ const PRODUCT_SERVICES = [
   ProductVariantAttributeService,
   ProductAttributeService,
   ProductVariantService,
+  ProductVariantStockService,
   ProductVariantMetaService,
   ProductTypeService,
   ProductCategoryService,
@@ -28,6 +30,7 @@ export {
   ProductAttributeService,
   ProductVariantService,
   ProductVariantMetaService,
+  ProductVariantStockService,
   ProductTypeService,
   ProductCategoryService,
   ProductDigitalService,

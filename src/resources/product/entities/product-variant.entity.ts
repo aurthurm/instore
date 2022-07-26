@@ -1,7 +1,7 @@
+import { ProductVariantStock } from './product-variant-stock.entity';
 import { InStoreBase } from 'src/resources/base/base.entity';
 import { CheckOutLine } from 'src/resources/checkout/entities/checkout-line.entity';
 import { OrderLine } from 'src/resources/order/entities/order-line.entity';
-import { WareHouse } from 'src/resources/warehouse/entities/warehouse.entity';
 import { Entity, Column, OneToMany, ManyToOne } from 'typeorm';
 import { ProductDigital } from './product-digital.entity';
 import { ProductMedia } from './product-media.entity';
@@ -15,7 +15,7 @@ export class ProductVariant extends InStoreBase {
   })
   product: Product;
 
-  @Column({ unique: true, nullable: true })
+  @Column({ nullable: true })
   sku: string;
 
   @Column({ unique: true, nullable: true })
@@ -33,8 +33,17 @@ export class ProductVariant extends InStoreBase {
   @Column({ nullable: true })
   pre_order_end_date: Date;
 
+  @Column({ nullable: true }) // cululative from onset
+  quantity_all_time: number;
+
   @Column({ nullable: true })
   quantity: number;
+
+  @Column({ nullable: true })
+  quantity_available: number;
+
+  @Column({ nullable: true })
+  quantity_allocated: number;
 
   @Column({ nullable: true })
   quantity_limit_per_customer: number;
@@ -42,13 +51,14 @@ export class ProductVariant extends InStoreBase {
   @Column({ nullable: true })
   weight: string;
 
+  @Column({ nullable: false, default: 'hidden' }) // hidden, published, scheduled
+  status: string;
+
+  @Column({ nullable: false, default: 0 })
+  price: number;
+
   @OneToMany((type) => ProductVariantMeta, (product) => product.product_variant)
   variants_meta: ProductVariantMeta[];
-
-  @ManyToOne((type) => WareHouse, (warehouse) => warehouse.product_variants, {
-    nullable: true,
-  })
-  warehouse: WareHouse;
 
   @OneToMany((type) => ProductDigital, (product) => product.product_variant)
   digitals: ProductDigital[];
@@ -58,4 +68,15 @@ export class ProductVariant extends InStoreBase {
 
   @OneToMany((type) => CheckOutLine, (checkout_line) => checkout_line.variant)
   checkout_lines: CheckOutLine[];
+
+  // For singule unit stock management
+  @Column({ nullable: true, default: true })
+  has_single_units: boolean;
+
+  // of is_single_units == true, then individual stock inits will be created
+  @OneToMany(
+    (type) => ProductVariantStock,
+    (product) => product.product_variant,
+  )
+  variant_stocks: ProductVariantStock[];
 }

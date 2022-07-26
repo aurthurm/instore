@@ -31,6 +31,6 @@ export class StockService {
   }
 
   async delete(id): Promise<any> {
-    return await this.stockRepository.remove(id);
+    return await this.stockRepository.delete(id);
   }
 }

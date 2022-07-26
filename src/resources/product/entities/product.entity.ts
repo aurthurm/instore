@@ -17,6 +17,12 @@ export class Product extends InStoreBase {
   @Column({ type: 'text', nullable: true })
   description: string;
 
+  @Column({ nullable: true, default: 'hidden' }) // hidden, published, scheduled
+  status: string;
+
+  @Column({ nullable: true, default: 0 })
+  price: number;
+
   @ManyToOne((type) => ProductType, (product_type) => product_type.products, {
     nullable: true,
   })

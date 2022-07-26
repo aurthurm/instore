@@ -7,7 +7,6 @@ import { UpdateProductDto } from '../dto/update-product.dto';
 import { Product } from '../entities/product.entity';
 import { prepareForCreate, prepareForUpdate } from 'src/helpers/entity.helpers';
 import { ProductVariantService } from './product-variant.service';
-import { CreateProductVariantsDto } from '../dto/create-product-variant.dto';
 import slugify from 'slugify';
 import {
   IPaginationOptions,
@@ -24,23 +23,10 @@ export class ProductService {
   ) {}
 
   async create(product: CreateProductDto): Promise<Product> {
-    console.log(product);
     const created = await this.productRepository.save({
       ...prepareForCreate(product),
       slug: slugify(product.name),
     });
-    // TODO cretae a defaultVariant
-    // const defaultVariant = Object.assign(new CreateProductVariantsDto(), {
-    //   sku: '0000',
-    //   product,
-    //   name: created.name,
-    //   slug: created.slug,
-    //   description: 'Default Variant for ' + product.description,
-    //   is_pre_order: false,
-    //   quantity_limit_per_customer: 1,
-    //   weight: 0,
-    // });
-    // await this.variantService.create(prepareForCreate(defaultVariant));
     return await this.readById(created.id);
   }
 

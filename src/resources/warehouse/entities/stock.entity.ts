@@ -4,7 +4,7 @@ import { Allocation } from './allocation.entity';
 import { Reservation } from './reservation.entity';
 import { WareHouse } from './warehouse.entity';
 
-@Entity('stock')
+@Entity('warehouse_stock')
 export class Stock extends InStoreBase {
   @Column()
   quantity: number;

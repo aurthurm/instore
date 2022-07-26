@@ -49,7 +49,6 @@ export class ProductAttributeService {
       .setParameters({ prodId: filters.product })
       .getMany();
     // .where("product.id = :product", { product })
-    console.log(filters, results);
     return results;
   }
 

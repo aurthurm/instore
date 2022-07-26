@@ -30,6 +30,6 @@ export class OrderService {
   }
 
   async delete(id): Promise<any> {
-    return await this.orderRepository.remove(id);
+    return await this.orderRepository.delete(id);
   }
 }

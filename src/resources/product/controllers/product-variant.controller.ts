@@ -1,3 +1,4 @@
+import { ProductVariantFilter } from './../dto/create-product-variant.dto';
 import {
   Controller,
   Get,
@@ -9,6 +10,10 @@ import {
   Res,
   HttpStatus,
   Put,
+  DefaultValuePipe,
+  ParseIntPipe,
+  Query,
+  Request,
 } from '@nestjs/common';
 import { ProductVariantService } from '../services/product-variant.service';
 import { CreateProductVariantsDto } from '../dto/create-product-variant.dto';
@@ -35,11 +40,23 @@ export class ProductVariantController {
   }
 
   @Get()
-  async fetchAll(@Res() response) {
-    const productVariants = await this.productVariantService.readAll();
-    return response.status(HttpStatus.OK).json({
-      productVariants,
-    });
+  async fetchAll(
+    @Query() filters: ProductVariantFilter,
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page = 1,
+    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit = 10,
+    @Res() response,
+    @Request() request,
+  ) {
+    limit = limit > 100 ? 100 : limit;
+    const pagination = await this.productVariantService.readAll(
+      {
+        page,
+        limit,
+        route: request?.headers?.hostname,
+      },
+      filters,
+    );
+    return response.status(HttpStatus.OK).json(pagination);
   }
 
   @Get('/:id')

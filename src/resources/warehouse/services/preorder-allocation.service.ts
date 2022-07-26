@@ -34,6 +34,6 @@ export class PreOrderAllocationService {
   }
 
   async delete(id): Promise<any> {
-    return await this.allocationRepository.remove(id);
+    return await this.allocationRepository.delete(id);
   }
 }

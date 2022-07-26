@@ -1,3 +1,4 @@
+import { ProductVariantStock } from './../entities/product-variant-stock.entity';
 import { ProductVariantMeta } from 'src/resources/product/entities/product-variant-meta.entity';
 import { ProductVariantAttribute } from './product-variant-attribute.entity';
 import { ProductAttribute } from './product-attribute.entity';
@@ -15,6 +16,7 @@ const PRODUCT_ENTITIES = [
   ProductVariantAttribute,
   ProductVariantMeta,
   ProductVariant,
+  ProductVariantStock,
   ProductType,
   ProductCategory,
   ProductDigital,
@@ -28,6 +30,7 @@ export {
   ProductVariantAttribute,
   ProductVariantMeta,
   ProductVariant,
+  ProductVariantStock,
   ProductType,
   ProductCategory,
   ProductDigital,

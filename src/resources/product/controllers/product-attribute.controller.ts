@@ -62,8 +62,6 @@ export class ProductAttributeController {
 
   @Get('/filter')
   async filter(@Res() response, @Query() filters: ProductAttributeFilter) {
-    console.log(filters);
-    Logger.log(filters);
     const results = await this.productAttributeService.readBy(filters);
     return response.status(HttpStatus.OK).json({
       items: results,

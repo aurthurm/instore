@@ -1,7 +1,7 @@
+import { ProductVariantStock } from './../../product/entities/product-variant-stock.entity';
 import { InStoreBase } from 'src/resources/base/base.entity';
 import { CheckOut } from 'src/resources/checkout/entities/checkout.entity';
 import { OrderFullfilmentLine } from 'src/resources/order/entities/order-fullfilment-line.entity';
-import { ProductVariant } from 'src/resources/product/entities/product-variant.entity';
 import { Entity, Column, OneToMany } from 'typeorm';
 import { Stock } from './stock.entity';
 
@@ -28,8 +28,8 @@ export class WareHouse extends InStoreBase {
   )
   fullfilment_lines: OrderFullfilmentLine[];
 
-  @OneToMany((type) => ProductVariant, (variant) => variant.warehouse)
-  product_variants: ProductVariant[];
+  @OneToMany((type) => ProductVariantStock, (variant) => variant.warehouse)
+  variant_stocks: ProductVariantStock[];
 
   @OneToMany((type) => Stock, (stock) => stock.warehouse)
   stocks: Stock[];

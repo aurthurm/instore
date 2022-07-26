@@ -55,7 +55,7 @@ export class UserService {
     return this.userRepository.update({ id }, userDto);
   }
 
-  remove(id: string) {
+  delete(id: string) {
     return this.userRepository.delete(id);
   }
 }

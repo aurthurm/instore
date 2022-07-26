@@ -41,6 +41,14 @@ export class CreateProductDto implements Readonly<CreateProductDto> {
   @ApiProperty()
   weight: string;
 
+  @ApiProperty()
+  @IsString()
+  status: string;
+
+  @ApiProperty()
+  @IsNumber()
+  price: number;
+
   @ApiProperty({})
   @IsNumber()
   rating: number;
@@ -114,8 +122,18 @@ export class ProductFilter {
   @ApiProperty()
   weight: string;
 
-  @IsString()
+  @IsNumber()
   @IsOptional()
   @ApiProperty()
   rating: number;
+
+  @IsString()
+  @IsOptional()
+  @ApiProperty()
+  status: string;
+
+  @IsString()
+  @IsOptional()
+  @ApiProperty()
+  price: string;
 }

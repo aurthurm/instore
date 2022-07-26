@@ -1,3 +1,4 @@
+import { ProductVariantStockController } from './product-variant-stock.controller';
 import { ProductVariantAttributeController } from './product-attribute-variant.controller';
 import { ProductAttributeController } from './product-attribute.controller';
 import { ProductController } from './product.controller';
@@ -14,6 +15,7 @@ const PRODUCT_CONTROLLERS = [
   ProductAttributeController,
   ProductVariantAttributeController,
   ProductVariantController,
+  ProductVariantStockController,
   ProductVariantMetaController,
   ProductTypeController,
   ProductCategoryController,
@@ -26,6 +28,7 @@ export {
   ProductController,
   ProductAttributeController,
   ProductVariantAttributeController,
+  ProductVariantStockController,
   ProductVariantController,
   ProductVariantMetaController,
   ProductTypeController,

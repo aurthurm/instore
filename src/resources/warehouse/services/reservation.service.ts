@@ -31,6 +31,6 @@ export class ReservationService {
   }
 
   async delete(id): Promise<any> {
-    return await this.reservationRepository.remove(id);
+    return await this.reservationRepository.delete(id);
   }
 }
