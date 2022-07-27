@@ -20,7 +20,11 @@ async function bootstrap() {
 
   app.use(helmet());
 
-  await app.listen(3000);
+  await app.listen(
+    process.env.BACKEND_SERVER_PORT || 3000,
+    process.env.BACKEND_SERVER_HOST || '0.0.0.0',
+  
+  );
   const appService = app.get(AppInitService);
   appService.initialize();
 }

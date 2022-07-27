@@ -30,7 +30,7 @@ import { RESOURCE_MODULES } from './resources';
         ...PRODUCT_ENTITIES,
       ],
     }),
-    MongooseModule.forRoot('mongodb://192.168.122.185/instore'),
+    MongooseModule.forRoot(`mongodb://${process.env.MONGODB_SERVER_HOST}/${process.env.MONGODB_DATABASE_NAME}`), 
     MailerModule.forRoot({
       transport: {
         host: 'localhost',
@@ -53,6 +53,13 @@ import { RESOURCE_MODULES } from './resources';
           strict: true,
         },
       },
+    }),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'uploads'),
+      serveRoot: '/uploads',
+    }),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '../../instore-angular-frontend/dist', 'instore-angular-frontend'),
     }),
     ...RESOURCE_MODULES,
   ],
