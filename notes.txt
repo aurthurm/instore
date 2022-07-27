@@ -1,4 +1,10 @@
 # Usefull commands
+git submodule foreach "git checkout main && git pull"
+git submodule update --rebase --remote
+git config submodule.recurse true
+git pull
+git submodule foreach --recursive git checkout master
+git submodule foreach --recursive git pull
 git clone --recurse-submodules http://github.com/aurthurm/instore
 git pull --recurse-submodules
 git push --recurse-submodules=on-demand
