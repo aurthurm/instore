@@ -18,10 +18,22 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('docs', app, document);
 
-  // app.use(helmet());
+  app.use(helmet({
+    contentSecurityPolicy: {
+      useDefaults: true,
+      directives: {
+        scriptSrc: ["'self'", "'unsafe-inline'"],
+        styleSrc: ["'self'", "'unsafe-inline'"],
+        mediaSrc: ["'self'", "'unsafe-inline'"],
+        scriptSrcElem: ["'self'", "'unsafe-inline'"],
+        scriptSrcAttr: ["'self'", "'unsafe-inline'"],
+        connectSrc: ["'self'", "'unsafe-inline'"],
+      }
+    }
+  }));
 
   await app.listen(
-    process.env.BACKEND_SERVER_PORT || 3000,
+    process.env.BACKEND_SERVER_PORT || 5000,
     process.env.BACKEND_SERVER_HOST || '0.0.0.0',
   
   );
