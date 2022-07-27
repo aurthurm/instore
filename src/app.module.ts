@@ -30,7 +30,7 @@ import { RESOURCE_MODULES } from './resources';
         ...PRODUCT_ENTITIES,
       ],
     }),
-    MongooseModule.forRoot('mongodb://127.0.0.1/instore'),
+    MongooseModule.forRoot('mongodb://192.168.122.185/instore'),
     MailerModule.forRoot({
       transport: {
         host: 'localhost',
