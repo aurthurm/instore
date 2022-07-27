@@ -19,8 +19,8 @@ async function bootstrap() {
   SwaggerModule.setup('docs', app, document);
 
   app.use(helmet({
-    crossOriginResourcePolicy: false,
-    crossOriginEmbedderPolicy: false,
+    crossOriginResourcePolicy: true,
+    crossOriginEmbedderPolicy: true,
     contentSecurityPolicy: {
       useDefaults: true,
       directives: {
