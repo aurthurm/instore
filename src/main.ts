@@ -18,7 +18,7 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('docs', app, document);
 
-  app.use(helmet());
+  // app.use(helmet());
 
   await app.listen(
     process.env.BACKEND_SERVER_PORT || 3000,
