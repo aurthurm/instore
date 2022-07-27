@@ -5,6 +5,7 @@ git push --recurse-submodules=on-demand
 git submodule foreach 'git stash'
 git submodule foreach 'git checkout -b featureA'
 git diff; git submodule foreach 'git diff'
+gh repo clone aurthurm/instore -- --recurse-submodules
 
 // production
 docker build -t instore_web_stack .
