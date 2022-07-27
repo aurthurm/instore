@@ -16,15 +16,17 @@ RUN npm run build --prod
 # BACKEND STAGE 1 BUILD
 FROM node:14.16.0-alpine as development
 
-WORKDIR /usr/src/app
+RUN mkdir -p /app
 
-COPY instore-nest-frontend/package*.json ./
+WORKDIR /app
+
+COPY ./instore-nest-backend/package*.json /app/
 
 RUN npm install glob rimraf
 
 RUN npm install --only=development
 
-COPY ./instore-nest-frontend ./
+COPY ./instore-nest-backend /app
 COPY --from=client-build /app/dist/instore-angular-frontend ../frontend/dist/instore-angular-frontend
 
 RUN npm run build
@@ -36,15 +38,17 @@ FROM node:14.16.0-alpine as production
 ARG NODE_ENV=production
 ENV NODE_ENV=${NODE_ENV}
 
-WORKDIR /usr/src/app
+RUN mkdir -p /app
 
-COPY instore-nest-frontend/package*.json ./
+WORKDIR /app
+
+COPY instore-nest-backend/package*.json /app/
 
 RUN npm install --only=production
 
-COPY ./instore-nest-frontend ./
+COPY ./instore-nest-backend /app
 
-COPY --from=development /usr/src/app/dist ./dist
+COPY --from=development /app/dist ./dist
 COPY --from=client-build /app/dist/instore-angular-frontend ../frontend/dist/instore-angular-frontend
 
-CMD ["node", "dist/main"]
+CMD ["node", "dist/src/main"]

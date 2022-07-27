@@ -1,0 +1,68 @@
+version: '3.8'
+
+services:
+  instore_aio:
+      container_name: instore_aio
+      image: instore_aio:1.0.0
+      build: 
+          context: .
+          dockerfile: Dockerfile
+      ports:
+          - "3000:3000"
+      networks:
+          - instore-net
+
+  nestapp_dev:
+      container_name: nestapp_dev
+      image: nestapp-api-dev:1.0.0
+      build:
+          context: ./instore-nest-backend
+          target: development
+          dockerfile: Dockerfile
+      command: npm run start:debug
+      ports:
+          - 3000:3000
+          - 9229:9229
+      networks:
+          - instore-net
+      volumes:
+          - ./instore-nest-backend:/usr/src/app
+          - /usr/src/app/node_modules
+      restart: unless-stopped
+
+  nestapp_prod:
+      container_name: nestapp_prod
+      image: nestapp-api-prod:1.0.0
+      build:
+          context: ./instore-nest-backend
+          target: production
+          dockerfile: Dockerfile
+      command: npm run start:prod
+      ports:
+          - 3000:3000
+          - 9229:9229
+      networks:
+          - instore-net
+      volumes:
+          - ./instore-nest-backend:/usr/src/app
+          - /usr/src/app/node_modules
+      restart: unless-stopped
+
+  instore_app:
+      container_name: instore_app
+      image: instore-app:1.0.0
+      build: 
+          context: ./instore-angular-frontend
+          dockerfile: Dockerfile
+      ports:
+          - "4200:4200"
+      networks:
+          - instore-net
+ 
+volumes:  
+  mongodb_data:
+
+
+networks:
+  instore-net:
+    driver: bridge

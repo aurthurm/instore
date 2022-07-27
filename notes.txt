@@ -1,4 +1,19 @@
 # Usefull commands
+
+
+// production
+docker build -t instore_web_stack .
+docker run -t -d -i -p 0.0.0.0:5000:5000/tcp -e BACKEND_SERVER_PORT=5000 -e MONGODB_SERVER_HOST=192.168.122.185 -e MONGODB_DATABASE_NAME=instore_web --name instore_website_app instore_web_stack:latest
+docker stop instore_website_app
+docker rm instore_website_app
+docker logs instore_website_app --follow
+docker exec -it instore_website_app sh
+
+// Local Dev
+docker run -t -d -i -p 0.0.0.0:5000:5000/tcp -e BACKEND_SERVER_PORT=5000 -e MONGODB_SERVER_HOST=192.168.122.185 -e MONGODB_DATABASE_NAME=instore_web --name instore_website_app instore_web_stack:latest
+
+
+// git dubmodule commands
 git submodule foreach "git checkout main && git pull"
 git submodule update --rebase --remote
 git config submodule.recurse true
@@ -12,14 +27,3 @@ git submodule foreach 'git stash'
 git submodule foreach 'git checkout -b featureA'
 git diff; git submodule foreach 'git diff'
 gh repo clone aurthurm/instore -- --recurse-submodules
-
-// production
-docker build -t instore_web_stack .
-docker run -t -d -i -p 0.0.0.0:5000:5000/tcp -v /home/lims/instore-website/data/uploads:/usr/src/app/uploads -e BACKEND_SERVER_PORT=5000 -e MONGODB_SERVER_HOST=192.168.0.40 -e MONGODB_DATABASE_NAME=instore_web --name instore_website_app instore_web_stack:latest
-docker stop instore_website_app
-docker rm instore_website_app
-docker logs instore_website_app --follow
-docker exec -it instore_website_app sh
-
-// Local dev
-docker run -t -d -i -p 0.0.0.0:5000:5000/tcp -v /home/aurthur/Development/Javascript/instore-website/backend/uploads:/usr/src/app/uploads -e BACKEND_SERVER_PORT=5000 -e MONGODB_SERVER_HOST=192.168.122.185 -e MONGODB_DATABASE_NAME=instore_web --name instore_webapp instore_stack:latest
