@@ -27,7 +27,7 @@ RUN npm install glob rimraf
 RUN npm install --only=development
 
 COPY ./instore-nest-backend /app
-COPY --from=client-build /app/dist/instore-angular-frontend ../frontend/dist/instore-angular-frontend
+COPY --from=client-build /app/dist/instore-angular-frontend /app/instore-angular-frontend/dist/instore-angular-frontend
 
 RUN npm run build
 
@@ -48,7 +48,7 @@ RUN npm install --only=production
 
 COPY ./instore-nest-backend /app
 
-COPY --from=development /app/dist ./dist
-COPY --from=client-build /app/dist/instore-angular-frontend ../frontend/dist/instore-angular-frontend
+COPY --from=development /app/dist /app/dist
+COPY --from=client-build /app/dist/instore-angular-frontend /app/instore-angular-frontend/dist/instore-angular-frontend
 
 CMD ["node", "dist/src/main"]
