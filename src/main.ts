@@ -5,8 +5,11 @@ import helmet from 'helmet';
 import { AppInitService } from './providers/inititlizer';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
-  app.enableCors();
+
+  const app = await NestFactory.create(AppModule, {
+    cors: true,
+    logger: ['error', 'warn', 'log', 'verbose', 'debug'],
+  });
 
   const config = new DocumentBuilder()
     .setTitle('Store Front')
