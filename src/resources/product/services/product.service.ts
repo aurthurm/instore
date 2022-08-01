@@ -1,5 +1,5 @@
 import { ProductFilter } from './../dto/create-product.dto';
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, UpdateResult } from 'typeorm';
 import { CreateProductDto } from '../dto/create-product.dto';
@@ -23,6 +23,7 @@ export class ProductService {
   ) {}
 
   async create(product: CreateProductDto): Promise<Product> {
+    if (!product.product_type) delete product.product_type;
     const created = await this.productRepository.save({
       ...prepareForCreate(product),
       slug: slugify(product.name),

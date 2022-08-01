@@ -3,6 +3,8 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { ServeStaticModule } from '@nestjs/serve-static';
+import { ConfigModule } from '@nestjs/config';
+
 import { join } from 'path';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -21,8 +23,16 @@ import { RESOURCE_MODULES } from './resources';
 
 @Module({
   imports: [
+    ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
       ...config,
+      ...{
+        host: `${process.env.POSTGRES_DATABASE_HOST}`,
+        port: +process.env.POSTGRES_DATABASE_PORT,
+        username: `${process.env.POSTGRES_DATABASE_USER}`,
+        password: `${process.env.POSTGRES_DATABASE_PASSWORD}`,
+        database: `${process.env.POSTGRES_DATABASE_NAME}`,
+      },
       entities: [
         User,
         ...CHECKOUT_ENTITIES,
@@ -31,7 +41,9 @@ import { RESOURCE_MODULES } from './resources';
         ...PRODUCT_ENTITIES,
       ],
     }),
-    MongooseModule.forRoot(`mongodb://${process.env.MONGODB_SERVER_HOST}/${process.env.MONGODB_DATABASE_NAME}`), 
+    MongooseModule.forRoot(
+      `mongodb://${process.env.MONGODB_SERVER_HOST}/${process.env.MONGODB_DATABASE_NAME}`,
+    ),
     MailerModule.forRoot({
       transport: {
         host: 'localhost',
@@ -60,7 +72,11 @@ import { RESOURCE_MODULES } from './resources';
       serveRoot: '/uploads',
     }),
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '../../instore-angular-frontend/dist', 'instore-angular-frontend'),
+      rootPath: join(
+        __dirname,
+        '../../instore-angular-frontend/dist',
+        'instore-angular-frontend',
+      ),
     }),
     ...RESOURCE_MODULES,
   ],

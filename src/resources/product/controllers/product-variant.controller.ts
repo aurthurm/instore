@@ -59,6 +59,30 @@ export class ProductVariantController {
     return response.status(HttpStatus.OK).json(pagination);
   }
 
+  @Post('/add-variant-stocks')
+  async addVariantStock(@Res() response, @Body() payload: any) {
+    const variant = await this.productVariantService.addVariantStocks(payload);
+    return response.status(HttpStatus.CREATED).json({
+      item: variant,
+    });
+  }
+
+  @Post('/transfer-variant-stocks')
+  async transferVariantStocks(@Res() response, @Body() payload: any) {
+    await this.productVariantService.transferVariantStocks(payload);
+    return response.status(HttpStatus.CREATED).json({
+      message: 'success',
+    });
+  }
+
+  @Get('/:id/transfer-data')
+  async getVariantStockTransferrability(@Res() response, @Param('id') id) {
+    const data = await this.productVariantService.getStockTransferData(id);
+    return response.status(HttpStatus.CREATED).json({
+      items: data,
+    });
+  }
+
   @Get('/:id')
   async findById(@Res() response, @Param('id') id) {
     const productVariant = await this.productVariantService.readById(id);

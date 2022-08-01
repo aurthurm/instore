@@ -35,7 +35,6 @@ export class ProductVariantService {
         product: productVariant.product,
       });
       if (product_variant) {
-        created.push(product_variant);
         console.log(`Atacking Variant Meta to Variant ...`);
         for (const var_meta of var_item['variant_meta']) {
           await this.productVariantMetaService.create({
@@ -43,6 +42,7 @@ export class ProductVariantService {
             product_variant: product_variant.id,
           });
         }
+
         if (product_variant.has_single_units) {
           const variant_stock = new ProductVariantStockDto();
           Object.assign(variant_stock, {
@@ -55,6 +55,7 @@ export class ProductVariantService {
             var_item.quantity,
           );
         }
+        created.push(await this.readById(product_variant.id));
       }
     }
     return created;
@@ -82,7 +83,17 @@ export class ProductVariantService {
   }
 
   async readById(id: string): Promise<ProductVariant> {
-    return await this.productVariantRepository.findOneBy({ id });
+    return await this.productVariantRepository.findOne({
+      where: { id },
+      relations: [
+        'product',
+        'product.category',
+        'product.product_type',
+        'variants_meta',
+        'variants_meta.product_attribute',
+        'variants_meta.product_variant_attribute',
+      ],
+    });
   }
 
   async update(
@@ -97,5 +108,38 @@ export class ProductVariantService {
 
   async delete(id): Promise<any> {
     return await this.productVariantRepository.delete(id);
+  }
+
+  async addVariantStocks(payload: any): Promise<ProductVariant> {
+    const product_variant = await this.readById(payload.product_variant);
+    await this.update(product_variant.id, {
+      quantity: (+product_variant.quantity ?? 0) + +payload.quantity,
+    });
+    if (product_variant.has_single_units) {
+      const variant_stock = new ProductVariantStockDto();
+      Object.assign(variant_stock, {
+        ...product_variant,
+        quantity: 1,
+        product_variant,
+        warehouse: payload.warehouse,
+      });
+      delete variant_stock.id;
+      await this.productVariantStockService.create(
+        variant_stock,
+        payload.quantity,
+      );
+    }
+    return await this.readById(product_variant.id);
+  }
+
+  async transferVariantStocks(payload: any): Promise<void> {
+    await this.productVariantStockService.transferVariantStocks(payload);
+  }
+
+  async getStockTransferData(id: string): Promise<any> {
+    const product_variant = await this.readById(id);
+    return await this.productVariantStockService.getTransferData(
+      product_variant.id,
+    );
   }
 }

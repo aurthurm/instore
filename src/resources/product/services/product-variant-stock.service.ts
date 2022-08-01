@@ -56,6 +56,42 @@ export class ProductVariantStockService {
     );
   }
 
+  async getTransferData(variantId: string): Promise<any> {
+    const data = await this.productVariantStockRepository
+      .createQueryBuilder('stocks')
+      .leftJoinAndSelect('stocks.warehouse', 'warehouse')
+      .select(
+        'warehouse.id AS warehouse_id, warehouse.name AS warehouse_name, COUNT(stocks.warehouse) As total',
+      )
+      .where('stocks.product_variant = :id', { id: variantId })
+      .groupBy('warehouse.id')
+      .getRawMany();
+
+    return data;
+  }
+
+  async transferVariantStocks(payload: any): Promise<any> {
+    // filter fetch
+    const stocks = await this.productVariantStockRepository.find({
+      where: {
+        warehouse: {
+          id: payload.from,
+        },
+        product_variant: {
+          id: payload.product_variant,
+        },
+        status: 'hidden',
+      },
+      take: +payload.quantity,
+    });
+    console.log(payload);
+    console.log(stocks);
+    // transfer to another warehouse
+    for (const _stock of stocks) {
+      await this.update(_stock.id, { warehouse: payload.to });
+    }
+  }
+
   async readById(id: string): Promise<ProductVariantStock> {
     return await this.productVariantStockRepository.findOneBy({ id });
   }

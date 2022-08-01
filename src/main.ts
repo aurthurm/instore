@@ -5,7 +5,6 @@ import helmet from 'helmet';
 import { AppInitService } from './providers/inititlizer';
 
 async function bootstrap() {
-
   const app = await NestFactory.create(AppModule, {
     cors: true,
     logger: ['error', 'warn', 'log', 'verbose', 'debug'],
@@ -40,7 +39,6 @@ async function bootstrap() {
   await app.listen(
     process.env.BACKEND_SERVER_PORT || 5000,
     process.env.BACKEND_SERVER_HOST || '0.0.0.0',
-  
   );
   const appService = app.get(AppInitService);
   appService.initialize();
