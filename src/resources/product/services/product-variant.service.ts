@@ -100,10 +100,11 @@ export class ProductVariantService {
     id: string,
     productVariant: UpdateProductVariantDto,
   ): Promise<any> {
-    return await this.productVariantRepository.update(
+    await this.productVariantRepository.update(
       { id },
       prepareForUpdate(productVariant),
     );
+    return await this.readById(id);
   }
 
   async delete(id): Promise<any> {
