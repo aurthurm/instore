@@ -1,0 +1,100 @@
+<div>
+    <form nz-form [formGroup]="form" (ngSubmit)="submitForm()">
+
+        <nz-form-item>
+          <nz-form-label [nzSpan]="7" nzRequired>First Name</nz-form-label>
+          <nz-form-control [nzSpan]="12">
+            <input nz-input formControlName="firstName" placeholder="First Name" />
+            <ng-template #userErrorTpl let-control>
+              <ng-container *ngIf="control.hasError('required')">Please input first name!</ng-container>
+            </ng-template>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+            <nz-form-label [nzSpan]="7" nzRequired>Last Name</nz-form-label>
+            <nz-form-control [nzSpan]="12">
+              <input nz-input formControlName="lastName" placeholder="Last Name" />
+              <ng-template #userErrorTpl let-control>
+                <ng-container *ngIf="control.hasError('required')">Please input last name!</ng-container>
+              </ng-template>
+            </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+              <nz-form-label [nzSpan]="7" nzRequired>Middle Name</nz-form-label>
+              <nz-form-control [nzSpan]="12">
+                <input nz-input formControlName="middleName" placeholder="Middle name" />
+                <ng-template #userErrorTpl let-control>
+                  <ng-container *ngIf="control.hasError('required')">Please input middle name!</ng-container>
+                </ng-template>
+              </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+              <nz-form-label [nzSpan]="7" nzRequired>Email</nz-form-label>
+              <nz-form-control [nzSpan]="12">
+                <input nz-input formControlName="email" placeholder="Email" />
+                <ng-template #userErrorTpl let-control>
+                  <ng-container *ngIf="control.hasError('required')">Email!</ng-container>
+                </ng-template>
+              </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+              <nz-form-label [nzSpan]="7" nzRequired>Phone</nz-form-label>
+              <nz-form-control [nzSpan]="12">
+                <input nz-input formControlName="phone" placeholder="Phone" />
+                <ng-template #userErrorTpl let-control>
+                  <ng-container *ngIf="control.hasError('required')">Phone Required!</ng-container>
+                </ng-template>
+              </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+              <nz-form-label [nzSpan]="7" nzRequired>Whatsapp Phone</nz-form-label>
+              <nz-form-control [nzSpan]="12">
+                <input nz-input formControlName="waBotPhone" placeholder="Whatsapp Phone" />
+                <ng-template #userErrorTpl let-control>
+                  <ng-container *ngIf="control.hasError('required')">Whatsapp Phone Required!</ng-container>
+                </ng-template>
+              </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+              <nz-form-label [nzSpan]="7" nzRequired>EAC Number</nz-form-label>
+              <nz-form-control [nzSpan]="12">
+                <input nz-input formControlName="eacNumber" placeholder="EAC Bumner" />
+                <ng-template #userErrorTpl let-control>
+                  <ng-container *ngIf="control.hasError('required')">EAC Number is Required!</ng-container>
+                </ng-template>
+              </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+            <nz-form-label [nzSpan]="7">Roles</nz-form-label>
+            <nz-form-control [nzSpan]="12">
+              <nz-select formControlName="roles" multiple> 
+                <nz-option *ngFor="let role of userRoles" [nzValue]="role" [nzLabel]="role"></nz-option>
+              </nz-select>
+            </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+            <nz-form-label [nzSpan]="7" nzRequired>Address</nz-form-label>
+            <nz-form-control [nzSpan]="12" nzErrorTip="Please write something here!">
+              <textarea formControlName="address" nz-input rows="2" placeholder="start typing here"></textarea>
+            </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-control [nzOffset]="7" [nzSpan]="12">
+            <button nz-button nzType="primary" [disabled]="!form.valid">Submit</button>
+            &nbsp;
+            <button nz-button (click)="resetForm($event)">Reset</button>
+          </nz-form-control>
+        </nz-form-item>
+      </form>
+</div>
+
+{{form.value |json}}

@@ -1,0 +1,91 @@
+<div>
+    <form nz-form [formGroup]="transactionForm" (ngSubmit)="submitForm()">
+
+      <!-- Subscription -->
+      <section formGroupName="subscription">
+
+          <nz-form-item>
+              <nz-form-label [nzSpan]="7">User</nz-form-label>
+              <nz-form-control [nzSpan]="12" nzHasFeedback>
+                <nz-select formControlName="userId">
+                  <nz-option *ngFor="let user of users" [nzValue]="user._id" [nzLabel]="user.firstName ?? ''"></nz-option>
+                </nz-select>
+              </nz-form-control>
+          </nz-form-item>
+    
+          <nz-form-item>
+              <nz-form-label [nzSpan]="7">Subscription Type</nz-form-label>
+              <nz-form-control [nzSpan]="12" nzHasFeedback>
+                <nz-select formControlName="subscriptionType">
+                  <nz-option *ngFor="let subscriptionType of subscriptionTypes" [nzValue]="subscriptionType._id" [nzLabel]="subscriptionType.title"></nz-option>
+                </nz-select>
+              </nz-form-control>
+          </nz-form-item>
+              
+          <nz-form-item>
+              <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired>Start Date</nz-form-label>
+              <nz-form-control [nzSm]="12" [nzXs]="24">
+                <nz-date-picker formControlName="startDate" [nzDisabledDate]="disabledDate"></nz-date-picker>
+              </nz-form-control>
+          </nz-form-item>
+    
+          <nz-form-item>
+            <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired>End Date</nz-form-label>
+            <nz-form-control [nzSm]="12" [nzXs]="24">
+              <nz-date-picker formControlName="endDate" nzDisabled="true"></nz-date-picker>
+            </nz-form-control>
+        </nz-form-item>
+        
+      </section>
+
+      <!-- Transaction -->
+      <section>
+        <nz-form-item>
+          <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired>Transaction Type</nz-form-label>
+          <nz-form-control [nzSm]="12" [nzXs]="24">
+            <nz-radio-group  nzButtonStyle="solid" formControlName="transactionType" (ngModelChange)="setTransactionType($event)">
+              <label nz-radio-button nzValue="cash">Cash</label>
+              <label nz-radio-button nzValue="ecocash">Ecocash</label>
+              <label nz-radio-button nzValue="paynow">PayNow</label>
+            </nz-radio-group>
+          </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item [hidden]="selectedTransactionType !== 'ecocash'">
+        <nz-form-label [nzSpan]="7" nzRequired>Phone Number</nz-form-label>
+        <nz-form-control [nzSpan]="12">
+          <input nz-input formControlName="phone" placeholder="Phone Number ..." />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item [hidden]="selectedTransactionType !== 'cash'">
+        <nz-form-label [nzSpan]="7" nzRequired>Rerefence</nz-form-label>
+        <nz-form-control [nzSpan]="12">
+          <input nz-input formControlName="reference" placeholder="Reference Number ..." />
+        </nz-form-control>
+      </nz-form-item>
+    
+      <nz-form-item [hidden]="selectedTransactionType !== 'cash'">
+          <nz-form-label [nzSpan]="7" nzRequired>Currency</nz-form-label>
+          <nz-form-control [nzSpan]="12" nzHasFeedback>
+            <nz-select formControlName="currency">
+              <nz-option *ngFor="let currency of ['ZWL','USD','ZAR']" [nzValue]="currency" [nzLabel]="currency"></nz-option>
+            </nz-select>
+          </nz-form-control>
+      </nz-form-item>
+
+    </section>
+
+
+    <nz-form-item>
+      <nz-form-control [nzOffset]="7" [nzSpan]="12">
+        <button nz-button nzType="primary" [disabled]="transactionForm.invalid ">{{selectedTransactionType == 'paynow'?'Proceed to PayNow':'subimt'}}</button>
+      </nz-form-control>
+    </nz-form-item>
+  </form>
+</div>
+
+
+{{transactionForm.value| json}}
+
+is valid :{{transactionForm.valid}}

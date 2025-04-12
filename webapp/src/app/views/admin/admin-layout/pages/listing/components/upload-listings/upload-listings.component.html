@@ -1,0 +1,42 @@
+
+<div>
+  <div>
+    <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Select Advertising Platform" class="mb-4" [(ngModel)]="targetAdvertiser">
+      <nz-option *ngFor="let user of users" [nzValue]="user" [nzLabel]="user.firstName ?? user.waBotPhone"></nz-option>
+    </nz-select>
+
+    <div *ngIf="targetAdvertiser">
+      <p class="mb-2">Confirm By typing the name <span class="p-1 bg-slate-400 rounded">{{ targetAdvertiser.firstName ?? targetAdvertiser.waBotPhone }}</span> below</p>
+      <input nz-input placeholder="large size" nzSize="large" (keyup)="confirmAdvertiser($event)"/>
+    </div>
+  </div>
+
+  <div *ngIf="advertiserConfrimed" class="mt-4">
+
+    <hr>
+    <nz-upload
+      nzType="drag"
+      [nzMultiple]="false"
+      [nzBeforeUpload]="beforeUpload"
+      (nzChange)="handleChange($event)"
+      >
+      <p class="ant-upload-drag-icon">
+        <i nz-icon nzType="inbox"></i>
+      </p>
+      <p class="ant-upload-text">Click or drag file to this area to upload</p>
+      <p class="ant-upload-hint">
+        Support for a single or bulk upload. Strictly prohibit from uploading company data or other band files
+      </p>
+    </nz-upload>
+  
+    <p class="mt-4"> {{ listingsToUpload.length }} unique Listings are ready for uploading</p>
+
+  </div>
+
+  <div class="flex justify-end mt-4">
+    <button nz-button nzType="default">Cancel</button>
+    &nbsp;
+    <button *ngIf="listingsToUpload.length > 0" nz-button nzType="primary" [nzLoading]="loading" (click)="save()">Save</button>
+  </div>
+
+</div>

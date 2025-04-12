@@ -1,0 +1,65 @@
+<div>
+    <form nz-form [formGroup]="form" (ngSubmit)="submitForm()">
+
+        <nz-form-item>
+          <nz-form-label [nzSpan]="7" nzRequired>Title</nz-form-label>
+          <nz-form-control [nzSpan]="12">
+            <input nz-input formControlName="title" placeholder="Title" />
+            <ng-template #userErrorTpl let-control>
+              <ng-container *ngIf="control.hasError('required')">Please input listing title!</ng-container>
+            </ng-template>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label [nzSpan]="7" nzRequired>Duration in days</nz-form-label>
+          <nz-form-control [nzSpan]="12">
+            <input nz-input formControlName="days"  />
+            <ng-template #userErrorTpl let-control>
+              <ng-container *ngIf="control.hasError('required')">Please input duration in days!</ng-container>
+            </ng-template>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+            <nz-form-label [nzSpan]="7">User Type</nz-form-label>
+            <nz-form-control [nzSpan]="12" nzHasFeedback>
+              <nz-select formControlName="userType">
+                <nz-option *ngFor="let user of userTypes" [nzValue]="user" [nzLabel]="user"></nz-option>
+              </nz-select>
+            </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+            <nz-form-label [nzSpan]="7" nzRequired>Description</nz-form-label>
+            <nz-form-control [nzSpan]="12" nzErrorTip="Please write something here!">
+              <textarea formControlName="description" nz-input rows="2" placeholder="start typing here"></textarea>
+            </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label [nzSpan]="7" nzRequired>Price</nz-form-label>
+          <nz-form-control [nzSpan]="12">
+            <input nz-input formControlName="price" placeholder="Title" />
+            <ng-template #userErrorTpl let-control>
+              <ng-container *ngIf="control.hasError('required')">price is required</ng-container>
+            </ng-template>
+          </nz-form-control>
+        </nz-form-item>
+          
+        <nz-form-item>
+            <nz-form-label [nzSpan]="7" nzRequired>Active</nz-form-label>
+            <nz-form-control [nzSpan]="12">
+                <label nz-checkbox formControlName="active"></label> 
+            </nz-form-control>           
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-control [nzOffset]="7" [nzSpan]="12">
+            <button nz-button nzType="primary" [disabled]="!form.valid">Submit</button>
+            &nbsp;
+            <button nz-button (click)="resetForm($event)">Reset</button>
+          </nz-form-control>
+        </nz-form-item>
+      </form>
+</div>

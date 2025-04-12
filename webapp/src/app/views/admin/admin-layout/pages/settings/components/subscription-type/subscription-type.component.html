@@ -1,0 +1,43 @@
+<button nz-button nzType="default" (click)="addSubscriptionType()">Add Subscrition Type</button>
+
+<div>
+    <nz-table
+          nzShowSizeChanger
+          [nzData]="subscriptionTypes"
+          [nzFrontPagination]="false"
+        >
+          <thead>
+            <tr>
+              <th nzColumnKey="title">Title</th>
+              <th nzColumnKey="title">Duration (Days)</th>
+              <th nzColumnKey="userType">User Type</th>
+              <th nzColumnKey="price">Price</th>
+              <th nzColumnKey="active">Active</th>
+              <th ></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let data of subscriptionTypes">
+              <td>{{ data.title }}</td>
+              <td>{{ data.days }}</td>
+              <td>{{ data.userType }}</td>
+              <td>{{ data.price }}</td>
+              <td>{{ data.active }}</td>
+              <td>
+                <div>
+                  <ng-container>
+                    <button nz-button nz-dropdown [nzDropdownMenu]="menu" >...</button>
+                    <nz-dropdown-menu #menu="nzDropdownMenu">
+                      <ul nz-menu>
+                        <li nz-menu-item>Edit</li>
+                        <li nz-menu-item>View</li>
+                        <li nz-menu-item>Dowload</li>
+                      </ul>
+                    </nz-dropdown-menu>
+                  </ng-container>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+    </nz-table>
+  </div>

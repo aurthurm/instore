@@ -1,0 +1,43 @@
+<button nz-button nzType="default" (click)="addSubscriptionType()">Add Transaction</button>
+
+<div>
+    <nz-table
+          nzShowSizeChanger
+          [nzData]="transactions"
+          [nzFrontPagination]="false"
+        >
+          <thead>
+            <tr>
+              <th nzColumnKey="reference">#</th>
+              <th nzColumnKey="transactionType">Transaction Type</th>
+              <th nzColumnKey="user">User</th>
+              <th nzColumnKey="currency">Currency</th>
+              <th nzColumnKey="description">Description</th>
+              <th ></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let data of transactions">
+              <td>{{ data.reference }}</td>
+              <td>{{ data.transactionType }}</td>
+              <td>{{ data.user }}</td>
+              <td>{{ data.currency }} {{ data.amount }}</td>
+              <td>{{ data.description }}</td>
+              <td>
+                <div>
+                  <ng-container>
+                    <button nz-button nz-dropdown [nzDropdownMenu]="menu" >...</button>
+                    <nz-dropdown-menu #menu="nzDropdownMenu">
+                      <ul nz-menu>
+                        <li nz-menu-item>Edit</li>
+                        <li nz-menu-item>View</li>
+                        <li nz-menu-item>Dowload</li>
+                      </ul>
+                    </nz-dropdown-menu>
+                  </ng-container>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+    </nz-table>
+  </div>

@@ -1,0 +1,121 @@
+<div>
+    <form nz-form [formGroup]="form" (ngSubmit)="submitForm()">
+
+        <nz-form-item>
+          <nz-form-label [nzSpan]="7" nzRequired>Title</nz-form-label>
+          <nz-form-control [nzSpan]="12">
+            <input nz-input formControlName="title" placeholder="Title" />
+            <ng-template #userErrorTpl let-control>
+              <ng-container *ngIf="control.hasError('required')">Please input listing title!</ng-container>
+            </ng-template>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+            <nz-form-label [nzSpan]="7" nzRequired>Description</nz-form-label>
+            <nz-form-control [nzSpan]="12" nzErrorTip="Please write something here!">
+              <textarea formControlName="description" nz-input rows="2" placeholder="start typing here"></textarea>
+            </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label [nzSpan]="7" nzRequired>Price</nz-form-label>
+          <nz-form-control [nzSpan]="12">
+            <input nz-input formControlName="price" placeholder="Title" />
+            <ng-template #userErrorTpl let-control>
+              <ng-container *ngIf="control.hasError('required')">price is required</ng-container>
+            </ng-template>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+            <nz-form-label [nzSpan]="7">Advertiser</nz-form-label>
+            <nz-form-control [nzSpan]="12">
+              <nz-select formControlName="advertiserId">
+                <nz-option *ngFor="let user of users" [nzValue]="user._id" [nzLabel]="user.firstName ?? user.waBotPhone"></nz-option>
+              </nz-select>
+            </nz-form-control>
+        </nz-form-item>
+          
+        <nz-form-item>
+            <nz-form-label [nzSm]="7" [nzXs]="24" nzRequired>Expiration Date</nz-form-label>
+            <nz-form-control [nzSm]="12" [nzXs]="24">
+              <nz-date-picker formControlName="expirationDate"></nz-date-picker>
+            </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label [nzSpan]="7" nzRequired>Priority</nz-form-label>
+          <nz-form-control [nzSpan]="12">
+            <input nz-input formControlName="priority" placeholder="Priority" />
+            <ng-template #userErrorTpl let-control>
+              <ng-container *ngIf="control.hasError('required')">Please input listing title!</ng-container>
+            </ng-template>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+            <nz-form-label [nzSpan]="7" nzRequired>Address</nz-form-label>
+            <nz-form-control [nzSpan]="12" nzErrorTip="Please write something here!">
+              <textarea formControlName="address" nz-input rows="2" placeholder="start typing here"></textarea>
+            </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label [nzSpan]="7" nzRequired>City</nz-form-label>
+          <nz-form-control [nzSpan]="12">
+            <input nz-input formControlName="city" placeholder="City" />
+            <ng-template #userErrorTpl let-control>
+              <ng-container *ngIf="control.hasError('required')">Please input listing City!</ng-container>
+            </ng-template>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label [nzSpan]="7" nzRequired>Suburb</nz-form-label>
+          <nz-form-control [nzSpan]="12">
+            <input nz-input formControlName="suburb" placeholder="Suburb" />
+            <ng-template #userErrorTpl let-control>
+              <ng-container *ngIf="control.hasError('required')">Please input Suburb!</ng-container>
+            </ng-template>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label [nzSpan]="7" nzRequired>Street</nz-form-label>
+          <nz-form-control [nzSpan]="12">
+            <input nz-input formControlName="street" placeholder="Steet" />
+            <ng-template #userErrorTpl let-control>
+              <ng-container *ngIf="control.hasError('required')">Please input street!</ng-container>
+            </ng-template>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+            <nz-form-label [nzSpan]="7">Subsciption</nz-form-label>
+            <nz-form-control [nzSpan]="12" nzHasFeedback>
+              <nz-select formControlName="subscriptionId">
+                <nz-option nzValue="Subscriber 1" nzLabel="Subscriber 1"></nz-option>
+                <nz-option nzValue="Subscriber 2" nzLabel="Subscriber 2"></nz-option>
+              </nz-select>
+            </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+            <nz-form-label [nzSpan]="7">Amenities</nz-form-label>
+            <nz-form-control [nzSpan]="12" nzHasFeedback>
+              <nz-select formControlName="amenities" nzMode="tags" nzPlaceHolder="Amenities">
+                <nz-option *ngFor="let option of amenitiesSuggestions" [nzLabel]="option" [nzValue]="option"></nz-option>
+              </nz-select>
+            </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-control [nzOffset]="7" [nzSpan]="12">
+            <button nz-button nzType="primary" [disabled]="!form.valid">Submit</button>
+            &nbsp;
+            <button nz-button (click)="resetForm($event)">Reset</button>
+          </nz-form-control>
+        </nz-form-item>
+      </form>
+</div>
